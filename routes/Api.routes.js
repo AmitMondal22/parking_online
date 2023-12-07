@@ -15,12 +15,9 @@ Api.post('/auth/testtoken',checkedToken, test);
 Api.post('/vehicle/list',checkedToken, vehicle_list);
 
 Api.post('/master/general_settings',checkedToken, general_settings);
-
 Api.post('/master/receipt_setting',checkedToken, receipt_setting);
-
 Api.post('/master/rate_dtls_list',checkedToken, rate_dtls_list);
 Api.post('/master/fixed_rate_dtls_list',checkedToken, fixed_rate_dtls_list);
-
 Api.post('/master/gst_list',checkedToken, gst_list);
 
 
@@ -28,11 +25,8 @@ Api.post('/car/car_in',checkedToken, car_in);
 
 
 Api.post('/report/vehicle_wise',checkedToken, vehicle_wise);
-
 Api.post('/report/detail_report',checkedToken, detail_report);
-
 Api.post('/report/shift_wise',checkedToken, shift_wise);
-
 Api.post('/report/operator_wise',checkedToken, operator_wise);
 
 
