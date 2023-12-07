@@ -4,7 +4,7 @@ const { checkedToken } = require('../middleware/ApiAuthChecked.middleware');
 const { vehicle_list } = require('../controller/api/Vehicle.controller');
 const { general_settings, receipt_setting, rate_dtls_list, gst_list, fixed_rate_dtls_list } = require('../controller/api/Master.controller');
 const { car_in } = require('../controller/api/CarInCarOut.controller');
-const { vehicle_wise } = require('../controller/api/ReportApi.controller');
+const { vehicle_wise, detail_report } = require('../controller/api/ReportApi.controller');
 const Api=express.Router();
 
 Api.post('/auth/register', register);
@@ -29,7 +29,7 @@ Api.post('/car/car_in',checkedToken, car_in);
 
 Api.post('/report/vehicle_wise',checkedToken, vehicle_wise);
 
-Api.post('/report',checkedToken, vehicle_wise);
+Api.post('/report/detail_report',checkedToken, detail_report);
 
 
 
