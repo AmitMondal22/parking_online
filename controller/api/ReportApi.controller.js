@@ -60,6 +60,36 @@ const detail_report = async(req, res) => {
 
 
 
+const shift_wise = async(req, res) => {
+    try{
+        const schema = Joi.object({
+            from_date: Joi.string().required(),
+            to_date: Joi.string().required()
+        });
+        const { error, value } = schema.validate(req.body, { abortEarly: false });
+        if (error) {
+            const errors = {};
+            error.details.forEach(detail => {
+                errors[detail.context.key] = detail.message;
+            });
+            return res.json(sendErrorResponce(null,errors));
+        }
+
+
+        const userData = req.user;
+        const select=`a.shift_name, (SELECT COUNT(*) FROM td_vehicle_in AS b, td_receipt AS e WHERE e.vehicle_in_id = b.vehicle_in_id AND date (b.date_time_in) >= '${value.from_date}' AND date(b.date_time_in) <= '${value.to_date}' AND time(b.date_time_in) >= a.f_time AND time(b.date_time_in) <= a.t_time) AS quantity, (SELECT SUM(f.paid_amt) FROM td_vehicle_in AS c, td_receipt AS f WHERE f.vehicle_in_id = c.vehicle_in_id AND f.trans_flag = 'P' AND date(c.date_time_in) >= '${value.from_date}' AND date(c.date_time_in) <= '${value.to_date}' AND time(c.date_time_in) >= a.f_time AND time(c.date_time_in) <= a.t_time) AS totalAmount, (SELECT SUM(g.paid_amt) FROM td_vehicle_in AS d, td_receipt AS g WHERE g.vehicle_in_id = d.vehicle_in_id AND g.trans_flag = 'A' AND date(d.date_time_in) >= '${value.from_date}' AND date(d.date_time_in) <= '${value.to_date}' AND time(d.date_time_in) >= a.f_time AND time(d.date_time_in) <= a.t_time) AS TotalAdvance , h.operator_name,h.user_id`,
+        tablename=`md_shift AS a, md_operator AS h `,
+        where=`h.customer_id=a.customer_id AND h.customer_id=${userData.customer_id}`;
+        var data=await db_Select(select,tablename,where,null)
+        console.log(data)
+        res.json(sendOkResponce(data,null));
+    }catch(err){
+        res.json(sendErrorResponce(err));
+    }
+}
+
+
+
 const unbilled_report = async(req, res) => {
     try{
         const schema = Joi.object({
@@ -87,4 +117,4 @@ const unbilled_report = async(req, res) => {
     }
 }
 
-module.exports = { vehicle_wise,detail_report,unbilled_report };
+module.exports = { vehicle_wise,shift_wise,detail_report,unbilled_report };
