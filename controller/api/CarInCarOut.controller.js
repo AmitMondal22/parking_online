@@ -39,8 +39,9 @@ const car_in = async (req, res) => {
             if (td_vehicle_in.suc == 1) {
                 let insertId = td_vehicle_in.lastId.insertId;
                 let receipt_fields = `(vehicle_in_id, customer_id, user_id,vehicle_no, base_amt, cgst, sgst, paid_amt, gst_flag, device_id_in,  date_time_in, trans_flag, created_at)`,
-                    receipt_values = `(${insertId},${customer_id},'${value.vehicle_no}',${value.base_amt},${value.base_amt},${value.cgst}, ${value.sgst}, ${value.paid_amt}, '${value.gst_flag}', '${device_id}','${datetime}', 'A','${datetime}')`;
+                    receipt_values = `(${insertId},${customer_id},${user_id},'${value.vehicle_no}',${value.base_amt},${value.cgst}, ${value.sgst}, ${value.paid_amt}, '${value.gst_flag}', '${device_id}','${datetime}', 'A','${datetime}')`;
                 var receipt = await db_Insert("td_receipt", receipt_fields, receipt_values, null, 0);
+				//res.send(receipt);
                 if (receipt.suc == 1) {
                     res.json(sendOkResponce({ td_vehicle_in, receipt, receipt_number }, null));
                 } else {
