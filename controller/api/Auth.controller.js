@@ -96,6 +96,46 @@ const login = async (req, res) => {
     }
 }
 
+
+
+const change_password = async (req, res) => {
+    try {
+        const schema = Joi.object({
+            password: Joi.string().required(),
+            confirm_password: Joi.string().valid(Joi.ref('password')).required().strict()
+        });
+        const { error, value } = schema.validate(req.body, { abortEarly: false });
+        if (error) {
+            const errors = {};
+            error.details.forEach(detail => {
+                errors[detail.context.key] = detail.message;
+            });
+            return res.json(sendErrorResponce(errors));
+        }
+        const userData = req.user;
+        let pss = value.password
+        let enc_pss = bcrypt.hashSync(pss, 10)
+
+        let whr = `user_id='${userData.user_id}' AND allow_flag='Y' AND device_id='${userData.device_id}'`
+        var user_info = await db_Select("password", 'md_user', whr, null)
+        if ((user_info.msg).length == 1) {
+            if (await bcrypt.compare(value.password, user_info.msg[0].password)) {
+               let fields=`password='${enc_pss}'`,
+               whr=`user_id='${userData.user_id}' AND allow_flag='Y' AND device_id='${userData.device_id}'`
+               var changepass= await db_Insert("md_user", fields, null, whr, 1)
+               res.json(sendOkResponce("Password change successfully ", null));
+            } else {
+                res.json(sendErrorResponce(null, 'invalid password'));
+            }
+        } else {
+            res.json(sendErrorResponce(null, 'invalid username'));
+        }
+    } catch (error) {
+        res.json(sendErrorResponce(error));
+    }
+}
+
+
 const test = async (req, res) => {
     try {
         res.json(sendOkResponce(req.user, null));
@@ -104,4 +144,4 @@ const test = async (req, res) => {
     }
 }
 
-module.exports = { register, login, test };
+module.exports = { register, login,change_password, test };

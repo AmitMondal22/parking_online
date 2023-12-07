@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, test } = require('../controller/api/Auth.controller');
+const { register, login, test, change_password } = require('../controller/api/Auth.controller');
 const { checkedToken } = require('../middleware/ApiAuthChecked.middleware');
 const { vehicle_list } = require('../controller/api/Vehicle.controller');
 const { general_settings, receipt_setting, rate_dtls_list, gst_list, fixed_rate_dtls_list } = require('../controller/api/Master.controller');
@@ -9,6 +9,7 @@ const Api=express.Router();
 
 Api.post('/auth/register', register);
 Api.post('/auth/login', login);
+Api.post('/auth/change_password',checkedToken, change_password);
 Api.post('/auth/testtoken',checkedToken, test);
 
 
