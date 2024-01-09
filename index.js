@@ -1,6 +1,7 @@
 const express = require('express');
 const { Api } = require('./routes/Api.routes');
 const { Customer } = require('./routes/customer.routes');
+const { reportRouter } = require('./routes/ReportsRouter');
 
 const app = express(),
     session = require('express-session'),
@@ -60,6 +61,9 @@ app.get('/customer', (req, res) => {
 app.use('/api', Api);
 
 app.use('/', Customer);
+
+// MODIFY 09/01/2024 SUBHAM
+app.use('/report', reportRouter)
 
 
 app.get('*', function(req, res){
