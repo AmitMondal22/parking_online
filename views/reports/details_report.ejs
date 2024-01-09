@@ -26,7 +26,6 @@
                     <div class="dateWiseDataTable" id="resultDiv">
                     <h4 class="card-title">
                         <center>
-                            Test Title
                             <span id="searchCred"></span>
                         </center>
                     </h4>
@@ -52,21 +51,14 @@
 
                             <tfoot>
                                 <tr>
-                                    <td scope="col">#</th>
-                                    <td scope="col">Receipt No.</th>
-                                    <td scope="col">Date Time In</th>
-                                    <td scope="col">Mechine Sl. No. In</th>
-                                    <td scope="col">Vehicle Type</td>
-                                    <td scope="col">Vehicle No.</td>
-                                    <td scope="col">Date Time Out</td>
-                                    <td scope="col">Total</td>
-                                    <td scope="col">8000</td>
-                                    <td scope="col">Operator Name</td>
+                                    <td scope="col" colspan="8">Total</td>
+                                    <td scope="col" id="tot_amt"><b>0</b></td>
+                                    <td></td>
                                 </tr>   
                             </tfoot>
                         </table>
 
-                        <a href="#" class="printBtnDate"><i class="fa fa-print"></i> Print</a>
+                        <a href="#" class="printBtnDate" onclick="printDiv()"><i class="fa fa-print"></i> Print</a>
                     </div>
                 </div>
             </div>
@@ -75,6 +67,11 @@
 </div>
 
     <script src="https://raw.githubusercontent.com/phstc/jquery-dateFormat/master/dist/dateFormat.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#resultDiv').hide()
+        })
+    </script>
     <script>
         $('#btnSubmit').on('click', function(){
             var frm_dt = $('#frm_dt').val()
@@ -91,11 +88,15 @@
                     },
                     success: function (result) {
                         var res = JSON.parse(result);
-                        console.log(res)
+                        var paid_amt_tot = 0;
+                        $('#resultDiv').show()
+                        // console.log(res)
                         if(res.suc > 0){
                             if(res.msg.length > 0){
-                                let i = 1
+                                $('#searchCred').text(`Detail Report from ${frm_dt} to ${to_dt}`)
+                                let i = 1;
                                 for(let dt of res.msg){
+                                    paid_amt_tot += dt.paid_amt
                                     $('#resultDiv table tbody').append(`
                                     <tr>
                                         <td>${i}</td>
@@ -112,6 +113,9 @@
                                     `)
                                     i++
                                 }
+                                $('#tot_amt').text(paid_amt_tot)
+                            }else{
+                                $('#resultDiv table tbody').append('<tr><td colspan="10" class="text-center text-danger">No Data Found</td></tr>')
                             }
                         }
                     },
@@ -122,3 +126,37 @@
             }
         })
     </script>
+
+<script>
+    function printDiv() {
+
+        var divToPrint = document.getElementById('resultDiv');
+
+        var WindowObject = window.open('', 'Print-Window');
+        WindowObject.document.open();
+        WindowObject.document.writeln('<!DOCTYPE html>');
+        WindowObject.document.writeln('<html><head><title></title><style type="text/css">');
+
+
+        WindowObject.document.writeln('@media print { .center { text-align: center;}' +
+            '                                         .inline { display: inline; }' +
+            '                                         .underline { text-decoration: underline; }' +
+            '                                         .left { margin-left: 315px;} ' +
+            '                                         .right { margin-right: 375px; display: inline; }' +
+            '                                          table { border-collapse: collapse; font-size: 10px;}' +
+            '                                          th, td { border: 1px solid black; border-collapse: collapse; padding: 6px;}' +
+            '                                           th, td { }' +
+            '                                         .border { border: 1px solid black; } ' +
+            '                                         .bottom { bottom: 5px; width: 100%; position: fixed ' +
+            '                                       ' +
+            '                                   } } </style>');
+        WindowObject.document.writeln('</head><body onload="window.print()">');
+        WindowObject.document.writeln(divToPrint.innerHTML);
+        WindowObject.document.writeln('</body></html>');
+        WindowObject.document.close();
+        // setTimeout(function () {
+        //     WindowObject.close();
+        // }, 10);
+
+    }
+</script>
