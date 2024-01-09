@@ -14,12 +14,37 @@ reportRouter.get('/details_report', AuthCheckedMW, async (req, res) => {
     res.render('common/layouts/main', data)
 })
 
+reportRouter.get('/details_report_new', AuthCheckedMW, async (req, res) => {
+    var data = {
+        title: 'Detail Report',
+        page_path:'reports/detail_report_new.ejs',
+        dtFormat: dateFormat
+    }
+    res.render('common/layouts/main', data)
+})
+
 reportRouter.post('/get_details_report', AuthCheckedMW, async (req, res) => {
+    var custId = req.session.user.user_data.customer_id,
+    userType = req.session.user.user_data.user_type;
+
     var data = req.body;
     var select = `receiptNo, date_time_in, mc_srl_no, vehicleType, vehicle_no, opratorName, date_time_out, paid_amt, mc_srl_no_out`, 
     table_name = 'td_backlog_data', 
     whr = `DATE(date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}'`, 
     order = 'ORDER BY receiptNo';
+    var res_dt = await db_Select(select, table_name, whr, order)
+    res.send(res_dt)
+})
+
+reportRouter.post('/get_details_report_new', AuthCheckedMW, async (req, res) => {
+    var custId = req.session.user.user_data.customer_id,
+    userType = req.session.user.user_data.user_type;
+    
+    var data = req.body;
+    var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, b.date_time_out, b.device_id device_id_out, c.base_amt, c.cgst, c.sgst, c.paid_amt, f.operator_name`, 
+    table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f', 
+    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`, 
+    order = 'ORDER BY a.receipt_no';
     var res_dt = await db_Select(select, table_name, whr, order)
     res.send(res_dt)
 })
