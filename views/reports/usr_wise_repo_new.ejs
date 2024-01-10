@@ -34,15 +34,10 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Receipt No.</th>
-                                    <th scope="col">Date Time In</th>
-                                    <th scope="col">Mechine Sl. No. In</th>
-                                    <th scope="col">Vehicle Type</th>
-                                    <th scope="col">Vehicle No.</th>
-                                    <th scope="col">Date Time Out</th>
-                                    <th scope="col">Mechine Sl. No. Out</th>
-                                    <th scope="col">Amount</th>
                                     <th scope="col">Operator Name</th>
+                                    <th scope="col">MC Srl.No.</th>
+                                    <th scope="col">Count</th>
+                                    <th scope="col">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,9 +46,9 @@
 
                             <tfoot>
                                 <tr>
-                                    <td scope="col" colspan="8">Total</td>
+                                    <td scope="col" colspan="3">Total</td>
+                                    <td scope="col" id="tot_cnt"><b>0</b></td>
                                     <td scope="col" id="tot_amt"><b>0</b></td>
-                                    <td></td>
                                 </tr>   
                             </tfoot>
                         </table>
@@ -80,7 +75,7 @@
             if(frm_dt != '' && to_dt != ''){
                 $.ajax({
                     method: "POST",
-                    url: "/report/get_details_report_new",
+                    url: "/report/get_user_wise_report_new",
                     data: { frm_dt, to_dt },
                     dataType: "html",
                     beforeSend: function () {
@@ -89,33 +84,32 @@
                     success: function (result) {
                         var res = JSON.parse(result);
                         var paid_amt_tot = 0;
+                        var cnt_tot = 0;
                         $('#resultDiv').show()
+                        $('#resultDiv table tbody').empty()
                         // console.log(res)
                         if(res.suc > 0){
                             if(res.msg.length > 0){
-                                $('#searchCred').text(`Detail Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
+                                $('#searchCred').text(`User Wise Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
                                 let i = 1;
                                 for(let dt of res.msg){
-                                    paid_amt_tot += dt.paid_amt
+                                    paid_amt_tot += dt.tot_amt
+                                    cnt_tot += dt.tot_vehi
                                     $('#resultDiv table tbody').append(`
                                     <tr>
                                         <td>${i}</td>
-                                        <td>${dt.receipt_no}</td>
-                                        <td>${createDateTime(dt.date_time_in)}</td>
-                                        <td>${dt.device_id}</td>
-                                        <td>${dt.vehicle_name}</td>
-                                        <td>${dt.vehicle_no}</td>
-                                        <td>${createDateTime(dt.date_time_out)}</td>
-                                        <td>${dt.device_id_out}</td>
-                                        <td>${dt.paid_amt}</td>
-                                        <td>${dt.operator_name}</td>
+                                        <td>${dt.opratorName}</td>
+                                        <td>${dt.mc_srl_no_out}</td>
+                                        <td>${dt.tot_vehi}</td>
+                                        <td>${dt.tot_amt}</td>
                                     </tr>
                                     `)
                                     i++
                                 }
                                 $('#tot_amt').text(paid_amt_tot)
+                                $('#tot_cnt').text(cnt_tot)
                             }else{
-                                $('#resultDiv table tbody').append('<tr><td colspan="10" class="text-center text-danger">No Data Found</td></tr>')
+                                $('#resultDiv table tbody').append('<tr><td colspan="5" class="text-center text-danger">No Data Found</td></tr>')
                             }
                         }
                     },
