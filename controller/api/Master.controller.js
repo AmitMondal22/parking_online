@@ -66,7 +66,8 @@ const rate_dtls_list=async(req,res)=>{
             return res.json(sendErrorResponce(null,errors));
         }
         const userData = req.user;
-        let where=`customer_id=${userData.customer_id} AND rate_type='${value.dev_mod}'`;
+        let where=`customer_id=${userData.customer_id}`;
+        // let where=`customer_id=${userData.customer_id} AND rate_type='${value.dev_mod}'`;
         var data=await db_Select('*','md_rate_dtls',where,null)
         res.json(sendOkResponce(data,null));
     } catch (error) {
@@ -79,7 +80,7 @@ const rate_dtls_list=async(req,res)=>{
 const fixed_rate_dtls_list=async(req,res)=>{
     try {   
         const schema = Joi.object({
-            dev_mod: Joi.string().valid('D', 'R', 'B', 'F', 'A').required(),
+            // dev_mod: Joi.string().valid('D', 'R', 'B', 'F', 'A').required(),
             vehicle_id:Joi.number().required()
         });
         const { error, value } = schema.validate(req.body, { abortEarly: false });
@@ -91,7 +92,8 @@ const fixed_rate_dtls_list=async(req,res)=>{
             return res.json(sendErrorResponce(null,errors));
         }
         const userData = req.user;
-        let where=`customer_id=${userData.customer_id} AND rate_type='${value.dev_mod}' AND vehicle_id=${value.vehicle_id}`;
+        let where=`customer_id=${userData.customer_id} AND vehicle_id=${value.vehicle_id}`;
+        // let where=`customer_id=${userData.customer_id} AND rate_type='${value.dev_mod}' AND vehicle_id=${value.vehicle_id}`;
         var data=await db_Select('*','md_rate_dtls',where,null)
         res.json(sendOkResponce(data,null));
     } catch (error) {

@@ -73,7 +73,7 @@ const login = async (req, res) => {
                     selectData = `a.user_type, a.id, a.device_id, a.user_id, c.*, b.*,d.*,e.*`,
                     whr2 = `a.customer_id=b.customer_id AND a.seller_id=c.seller_id AND a.user_id=d.user_id AND e.customer_id=a.customer_id AND e.app_id='${value.device_id}'  AND a.user_id='${value.user_id}' AND a.allow_flag='Y' AND a.device_id='${value.device_id}'`
                 var userData2 = await db_Select(selectData, table, whr2, null)
-
+                    console.log(userData2)
                 if ((userData2.msg).length == 1) {
                     delete userData2.msg[0].password
                     let data = {
