@@ -26,7 +26,7 @@ const insert_receipt = (userData, receipt_no, base_amt, cgst, sgst, paid_amt, gs
             let datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 
             let receipt_fields = `(receipt_no, user_id, base_amt, cgst, sgst, paid_amt, gst_flag, trans_flag, created_at)`,
-                receipt_values = `(${receipt_no},${userData.user_id},${base_amt},${cgst}, ${sgst}, ${paid_amt}, '${gst_flag}', '${trans_flag}','${datetime}')`;
+                receipt_values = `(${receipt_no},${userData.id},${base_amt},${cgst}, ${sgst}, ${paid_amt}, '${gst_flag}', '${trans_flag}','${datetime}')`;
             var receipt = await db_Insert("td_receipt", receipt_fields, receipt_values, null, 0);
             resolve(receipt);
         } catch (error) {
@@ -43,7 +43,7 @@ const insert_vehicle_outpass = (userData, device_id, date_time_out, receipt_no) 
             let datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 
             let fields = `(user_id, device_id, date_time_out, receipt_no, created_at, updated_at)`,
-                values = `(${userData.user_id},'${device_id}','${date_time_out}', '${receipt_no}','${datetime}','${datetime}')`;
+                values = `(${userData.id},'${device_id}','${date_time_out}', '${receipt_no}','${datetime}','${datetime}')`;
             var data = await db_Insert("td_vehicle_out", fields, values, null, 0);
             resolve(data);
         } catch (error) {
