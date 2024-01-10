@@ -7,7 +7,7 @@ const vehicle_in = (userData, vehicle_id, vehicle_no, dev_mod, receipt_type) => 
             let datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
             let receipt_number = new Date().getTime();
             let vehicle_in_fields = `(user_id_in, vehicle_id, customer_id, device_id, vehicle_no, date_time_in, oprn_mode, receipt_type, receipt_no, created_at)`;
-            let vehicle_in_values = `(${userData.user_id}, ${vehicle_id}, ${userData.customer_id}, '${userData.device_id}', '${vehicle_no}', '${datetime}', '${dev_mod}', '${receipt_type}', ${receipt_number}, '${datetime}')`;
+            let vehicle_in_values = `(${userData.id}, ${vehicle_id}, ${userData.customer_id}, '${userData.device_id}', '${vehicle_no}', '${datetime}', '${dev_mod}', '${receipt_type}', ${receipt_number}, '${datetime}')`;
 
 
             let td_vehicle_in = await db_Insert("td_vehicle_in", vehicle_in_fields, vehicle_in_values, null, 0);
