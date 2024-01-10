@@ -75,7 +75,7 @@
             if(frm_dt != '' && to_dt != ''){
                 $.ajax({
                     method: "POST",
-                    url: "/report/get_user_wise_report",
+                    url: "/report/get_user_wise_report_new",
                     data: { frm_dt, to_dt },
                     dataType: "html",
                     beforeSend: function () {

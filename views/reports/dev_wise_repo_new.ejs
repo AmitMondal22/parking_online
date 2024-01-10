@@ -34,8 +34,8 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Operator Name</th>
-                                    <th scope="col">MC Srl.No.</th>
+                                    <th scope="col">Machine No</th>
+                                    <th scope="col">Vehicle Type</th>
                                     <th scope="col">Count</th>
                                     <th scope="col">Amount</th>
                                 </tr>
@@ -75,7 +75,7 @@
             if(frm_dt != '' && to_dt != ''){
                 $.ajax({
                     method: "POST",
-                    url: "/report/get_user_wise_report",
+                    url: "/report/get_dev_wise_report_new",
                     data: { frm_dt, to_dt },
                     dataType: "html",
                     beforeSend: function () {
@@ -90,7 +90,7 @@
                         // console.log(res)
                         if(res.suc > 0){
                             if(res.msg.length > 0){
-                                $('#searchCred').text(`User Wise Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
+                                $('#searchCred').text(`Device Wise Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
                                 let i = 1;
                                 for(let dt of res.msg){
                                     paid_amt_tot += dt.tot_amt
@@ -98,8 +98,8 @@
                                     $('#resultDiv table tbody').append(`
                                     <tr>
                                         <td>${i}</td>
-                                        <td>${dt.opratorName}</td>
                                         <td>${dt.mc_srl_no_out}</td>
+                                        <td>${dt.vehicleType}</td>
                                         <td>${dt.tot_vehi}</td>
                                         <td>${dt.tot_amt}</td>
                                     </tr>

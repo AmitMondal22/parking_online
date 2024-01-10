@@ -34,8 +34,7 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Operator Name</th>
-                                    <th scope="col">MC Srl.No.</th>
+                                    <th scope="col">Vehicle Type</th>
                                     <th scope="col">Count</th>
                                     <th scope="col">Amount</th>
                                 </tr>
@@ -46,7 +45,7 @@
 
                             <tfoot>
                                 <tr>
-                                    <td scope="col" colspan="3">Total</td>
+                                    <td scope="col" colspan="2">Total</td>
                                     <td scope="col" id="tot_cnt"><b>0</b></td>
                                     <td scope="col" id="tot_amt"><b>0</b></td>
                                 </tr>   
@@ -61,7 +60,6 @@
     </div>
 </div>
 
-    <script src="https://raw.githubusercontent.com/phstc/jquery-dateFormat/master/dist/dateFormat.min.js"></script>
     <script>
         $(document).ready(function(){
             $('#resultDiv').hide()
@@ -75,7 +73,7 @@
             if(frm_dt != '' && to_dt != ''){
                 $.ajax({
                     method: "POST",
-                    url: "/report/get_user_wise_report",
+                    url: "/report/get_veh_wise_report_new",
                     data: { frm_dt, to_dt },
                     dataType: "html",
                     beforeSend: function () {
@@ -90,7 +88,7 @@
                         // console.log(res)
                         if(res.suc > 0){
                             if(res.msg.length > 0){
-                                $('#searchCred').text(`User Wise Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
+                                $('#searchCred').text(`Veichle Wise Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
                                 let i = 1;
                                 for(let dt of res.msg){
                                     paid_amt_tot += dt.tot_amt
@@ -98,8 +96,7 @@
                                     $('#resultDiv table tbody').append(`
                                     <tr>
                                         <td>${i}</td>
-                                        <td>${dt.opratorName}</td>
-                                        <td>${dt.mc_srl_no_out}</td>
+                                        <td>${dt.vehicleType}</td>
                                         <td>${dt.tot_vehi}</td>
                                         <td>${dt.tot_amt}</td>
                                     </tr>
@@ -109,7 +106,7 @@
                                 $('#tot_amt').text(paid_amt_tot)
                                 $('#tot_cnt').text(cnt_tot)
                             }else{
-                                $('#resultDiv table tbody').append('<tr><td colspan="5" class="text-center text-danger">No Data Found</td></tr>')
+                                $('#resultDiv table tbody').append('<tr><td colspan="4" class="text-center text-danger">No Data Found</td></tr>')
                             }
                         }
                     },
