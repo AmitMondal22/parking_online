@@ -131,7 +131,6 @@ const out_pass = async (req, res) => {
     let vehicle_outpass = await insert_vehicle_outpass(userData, value.device_id, date_time_out, value.receipt_no);
 
     if (vehicle_outpass.suc == 1) {
-        
         let receipt = await insert_receipt(userData, value.receipt_no, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'P')
         
         if (receipt.suc == 1) {
