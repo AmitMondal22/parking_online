@@ -54,9 +54,9 @@ const car_in = async (req, res) => {
         } else if (md_setting_data.dev_mod == 'D' || md_setting_data.dev_mod == 'R') {
             let td_vehicle_in = await vehicle_in(userData, value.vehicle_id, value.vehicle_no, md_setting_data.dev_mod, md_setting_data.parking_entry_type)
             if (td_vehicle_in.td_vehicle_in.suc == 1) {
-                res.json(sendOkResponce({ td_vehicle_in }, null));
+                res.json(sendOkResponce({ td_vehicle_in,receipt_number }, null));
             } else {
-                res.json(sendErrorResponce(null, { message: td_vehicle_in })); 
+                res.json(sendErrorResponce(null, { message: td_vehicle_in, })); 
             }
         }
     } else {
