@@ -139,10 +139,10 @@ const out_pass = async (req, res) => {
             console.log(update_car_in_flag_status)
             res.json(sendOkResponce({update_car_in_flag_status }, null));
         }else{
-            res.json(sendErrorResponce(null, { message: 'Not Inserted' }));
+            res.json(sendErrorResponce(null, { message: receipt }));
         }
     }else{
-        res.json(sendErrorResponce(null, { message: 'Not Inserted' }));
+        res.json(sendErrorResponce(null, { message: vehicle_outpass }));
     }
 
 }
