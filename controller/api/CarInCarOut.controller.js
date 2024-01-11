@@ -44,7 +44,7 @@ const car_in = async (req, res) => {
                 let receipt_insert = await insert_receipt(userData, td_vehicle_in.receipt_number, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'A')
                 console.log(receipt_insert)
                 if (receipt_insert.suc == 1) {
-                    res.json(sendOkResponce({ td_vehicle_in, receipt_insert, td_vehicle_in }, null));
+                    res.json(sendOkResponce({ td_vehicle_in, receipt_insert, td_vehicle_in, receipt_number:td_vehicle_in.receipt_number }, null));
                 } else {
                     res.json(sendErrorResponce(null, { message: 'Not Inserted' }));
                 }
