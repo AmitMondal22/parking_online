@@ -76,7 +76,7 @@
             if(frm_dt != '' && to_dt != ''){
                 $.ajax({
                     method: "POST",
-                    url: "/report/unbilled_report",
+                    url: "/report/get_unbilled_report",
                     data: { frm_dt, to_dt },
                     dataType: "html",
                     beforeSend: function () {
