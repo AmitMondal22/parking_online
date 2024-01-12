@@ -135,11 +135,20 @@ const operator_wise = async(req, res) => {
 
 
         const userData = req.user;
-        const tablename=`td_vehicle_in a,td_receipt b,md_vehicle c, md_user d, md_operator e `,
-        where=`b.vehicle_in_id=a.vehicle_in_id AND c.vehicle_id=a.vehicle_id AND d.id=a.user_id_in AND e.user_id=d.user_id AND a.customer_id=${userData.customer_id} AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}' `,
-        orderby=`GROUP BY e.user_id`;
-        var data=await db_Select('a.*,SUM(b.paid_amt) AS paid_amt,c.*,e.*',tablename,where,orderby)
-        console.log(data)
+
+        var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, f.operator_name opratorName`, 
+        table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f', 
+        whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`, 
+        order = 'GROUP BY a.user_id_in';
+        var data = await db_Select(select, table_name, whr, order)
+
+
+
+        // const tablename=`td_vehicle_in a,td_receipt b,md_vehicle c, md_user d, md_operator e `,
+        // where=`b.vehicle_in_id=a.vehicle_in_id AND c.vehicle_id=a.vehicle_id AND d.id=a.user_id_in AND e.user_id=d.user_id AND a.customer_id=${userData.customer_id} AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}' `,
+        // orderby=`GROUP BY e.user_id_in`;
+        // var data=await db_Select('a.*,SUM(b.paid_amt) AS paid_amt,c.*,e.*',tablename,where,orderby)
+        // console.log(data)
         res.json(sendOkResponce(data,null));
     }catch(err){
         res.json(sendErrorResponce(err));
