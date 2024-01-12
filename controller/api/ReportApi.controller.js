@@ -1,9 +1,9 @@
 const Joi = require("joi");
 const { db_Select } = require("../../model/Master.model");
-const { sendOkResponce,sendErrorResponce } = require("response-json-format");
+const { sendOkResponce, sendErrorResponce } = require("response-json-format");
 
-const vehicle_wise = async(req, res) => {
-    try{
+const vehicle_wise = async (req, res) => {
+    try {
         const schema = Joi.object({
             from_date: Joi.string().required(),
             to_date: Joi.string().required()
@@ -14,25 +14,39 @@ const vehicle_wise = async(req, res) => {
             error.details.forEach(detail => {
                 errors[detail.context.key] = detail.message;
             });
-            return res.json(sendErrorResponce(null,errors));
+            return res.json(sendErrorResponce(null, errors));
         }
 
 
         const userData = req.user;
-        const tablename=`td_vehicle_in a,td_receipt b,md_vehicle c`,
-        where=`b.vehicle_in_id=a.vehicle_in_id AND c.vehicle_id=a.vehicle_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}' `,
-        orderby=`GROUP BY a.vehicle_id`;
-        var data=await db_Select('a.*,SUM(b.paid_amt) AS paid_amt,c.*',tablename,where,orderby)
-        console.log(data)
-        res.json(sendOkResponce(data,null));
-    }catch(err){
+        // const tablename = `td_vehicle_in a,td_receipt b,md_vehicle c`,
+        //     where = `b.vehicle_in_id=a.vehicle_in_id AND c.vehicle_id=a.vehicle_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}' `,
+        //     orderby = `GROUP BY a.vehicle_id`;
+        // var data = await db_Select('a.*,SUM(b.paid_amt) AS paid_amt,c.*', tablename, where, orderby)
+        // console.log(data)
+
+
+
+
+
+        var select = `d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt`,
+            table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d',
+            whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`,
+            order = 'GROUP BY a.vehicle_id';
+        var res_dt = await db_Select(select, table_name, whr, order)
+
+
+
+
+        res.json(sendOkResponce(data, null));
+    } catch (err) {
         res.json(sendErrorResponce(err));
     }
 }
 
 
-const unbilled = async(req, res) => {
-    try{
+const unbilled = async (req, res) => {
+    try {
         const schema = Joi.object({
             from_date: Joi.string().required(),
             to_date: Joi.string().required()
@@ -43,25 +57,25 @@ const unbilled = async(req, res) => {
             error.details.forEach(detail => {
                 errors[detail.context.key] = detail.message;
             });
-            return res.json(sendErrorResponce(null,errors));
+            return res.json(sendErrorResponce(null, errors));
         }
 
 
         const userData = req.user;
-        const tablename=`td_vehicle_in a,md_vehicle c`,
-        where=`c.vehicle_id=a.vehicle_id AND c.customer_id=a.customer_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}' `,
-        orderby=`GROUP BY a.vehicle_id`;
-        var data=await db_Select('a.*,SUM(b.paid_amt) AS paid_amt,c.*',tablename,where,orderby)
+        const tablename = `td_vehicle_in a,md_vehicle c`,
+            where = `c.vehicle_id=a.vehicle_id AND c.customer_id=a.customer_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}' `,
+            orderby = `GROUP BY a.vehicle_id`;
+        var data = await db_Select('a.*,SUM(b.paid_amt) AS paid_amt,c.*', tablename, where, orderby)
         console.log(data)
-        res.json(sendOkResponce(data,null));
-    }catch(err){
+        res.json(sendOkResponce(data, null));
+    } catch (err) {
         res.json(sendErrorResponce(err));
     }
 }
 
 
-const detail_report = async(req, res) => {
-    try{
+const detail_report = async (req, res) => {
+    try {
         const schema = Joi.object({
             from_date: Joi.string().required(),
             to_date: Joi.string().required()
@@ -72,25 +86,25 @@ const detail_report = async(req, res) => {
             error.details.forEach(detail => {
                 errors[detail.context.key] = detail.message;
             });
-            return res.json(sendErrorResponce(null,errors));
+            return res.json(sendErrorResponce(null, errors));
         }
 
 
         const userData = req.user;
-        const tablename=`td_vehicle_in a,td_receipt b`,
-        where=`b.vehicle_in_id=a.vehicle_in_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}'`;
-        var data=await db_Select('a.*,b.*',tablename,where,null)
+        const tablename = `td_vehicle_in a,td_receipt b`,
+            where = `b.vehicle_in_id=a.vehicle_in_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}'`;
+        var data = await db_Select('a.*,b.*', tablename, where, null)
         console.log(data)
-        res.json(sendOkResponce(data,null));
-    }catch(err){
+        res.json(sendOkResponce(data, null));
+    } catch (err) {
         res.json(sendErrorResponce(err));
     }
 }
 
 
 
-const shift_wise = async(req, res) => {
-    try{
+const shift_wise = async (req, res) => {
+    try {
         const schema = Joi.object({
             from_date: Joi.string().required(),
             to_date: Joi.string().required()
@@ -101,25 +115,25 @@ const shift_wise = async(req, res) => {
             error.details.forEach(detail => {
                 errors[detail.context.key] = detail.message;
             });
-            return res.json(sendErrorResponce(null,errors));
+            return res.json(sendErrorResponce(null, errors));
         }
 
 
         const userData = req.user;
-        const select=`a.shift_name, (SELECT COUNT(*) FROM td_vehicle_in AS b, td_receipt AS e WHERE e.vehicle_in_id = b.vehicle_in_id AND date (b.date_time_in) >= '${value.from_date}' AND date(b.date_time_in) <= '${value.to_date}' AND time(b.date_time_in) >= a.f_time AND time(b.date_time_in) <= a.t_time) AS quantity, (SELECT SUM(f.paid_amt) FROM td_vehicle_in AS c, td_receipt AS f WHERE f.vehicle_in_id = c.vehicle_in_id AND f.trans_flag = 'P' AND date(c.date_time_in) >= '${value.from_date}' AND date(c.date_time_in) <= '${value.to_date}' AND time(c.date_time_in) >= a.f_time AND time(c.date_time_in) <= a.t_time) AS totalAmount, (SELECT SUM(g.paid_amt) FROM td_vehicle_in AS d, td_receipt AS g WHERE g.vehicle_in_id = d.vehicle_in_id AND g.trans_flag = 'A' AND date(d.date_time_in) >= '${value.from_date}' AND date(d.date_time_in) <= '${value.to_date}' AND time(d.date_time_in) >= a.f_time AND time(d.date_time_in) <= a.t_time) AS TotalAdvance , h.operator_name,h.user_id`,
-        tablename=`md_shift AS a, md_operator AS h `,
-        where=`h.customer_id=a.customer_id AND h.customer_id=${userData.customer_id}`;
-        var data=await db_Select(select,tablename,where,null)
+        const select = `a.shift_name, (SELECT COUNT(*) FROM td_vehicle_in AS b, td_receipt AS e WHERE e.vehicle_in_id = b.vehicle_in_id AND date (b.date_time_in) >= '${value.from_date}' AND date(b.date_time_in) <= '${value.to_date}' AND time(b.date_time_in) >= a.f_time AND time(b.date_time_in) <= a.t_time) AS quantity, (SELECT SUM(f.paid_amt) FROM td_vehicle_in AS c, td_receipt AS f WHERE f.vehicle_in_id = c.vehicle_in_id AND f.trans_flag = 'P' AND date(c.date_time_in) >= '${value.from_date}' AND date(c.date_time_in) <= '${value.to_date}' AND time(c.date_time_in) >= a.f_time AND time(c.date_time_in) <= a.t_time) AS totalAmount, (SELECT SUM(g.paid_amt) FROM td_vehicle_in AS d, td_receipt AS g WHERE g.vehicle_in_id = d.vehicle_in_id AND g.trans_flag = 'A' AND date(d.date_time_in) >= '${value.from_date}' AND date(d.date_time_in) <= '${value.to_date}' AND time(d.date_time_in) >= a.f_time AND time(d.date_time_in) <= a.t_time) AS TotalAdvance , h.operator_name,h.user_id`,
+            tablename = `md_shift AS a, md_operator AS h `,
+            where = `h.customer_id=a.customer_id AND h.customer_id=${userData.customer_id}`;
+        var data = await db_Select(select, tablename, where, null)
         console.log(data)
-        res.json(sendOkResponce(data,null));
-    }catch(err){
+        res.json(sendOkResponce(data, null));
+    } catch (err) {
         res.json(sendErrorResponce(err));
     }
 }
 
 
-const operator_wise = async(req, res) => {
-    try{
+const operator_wise = async (req, res) => {
+    try {
         const schema = Joi.object({
             from_date: Joi.string().required(),
             to_date: Joi.string().required()
@@ -130,16 +144,16 @@ const operator_wise = async(req, res) => {
             error.details.forEach(detail => {
                 errors[detail.context.key] = detail.message;
             });
-            return res.json(sendErrorResponce(null,errors));
+            return res.json(sendErrorResponce(null, errors));
         }
 
 
         const userData = req.user;
 
-        var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, 0 adv_amt, f.operator_name opratorName`, 
-        table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f', 
-        whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`, 
-        order = 'GROUP BY a.user_id_in';
+        var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, 0 adv_amt, f.operator_name opratorName`,
+            table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f',
+            whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`,
+            order = 'GROUP BY a.user_id_in';
         var data = await db_Select(select, table_name, whr, order)
 
         // select adv_amt
@@ -151,15 +165,15 @@ const operator_wise = async(req, res) => {
         // orderby=`GROUP BY e.user_id_in`;
         // var data=await db_Select('a.*,SUM(b.paid_amt) AS paid_amt,c.*,e.*',tablename,where,orderby)
         // console.log(data)
-        res.json(sendOkResponce(data,null));
-    }catch(err){
+        res.json(sendOkResponce(data, null));
+    } catch (err) {
         res.json(sendErrorResponce(err));
     }
 }
 
 
-const unbilled_report = async(req, res) => {
-    try{
+const unbilled_report = async (req, res) => {
+    try {
         const schema = Joi.object({
             from_date: Joi.string().required(),
             to_date: Joi.string().required()
@@ -170,19 +184,19 @@ const unbilled_report = async(req, res) => {
             error.details.forEach(detail => {
                 errors[detail.context.key] = detail.message;
             });
-            return res.json(sendErrorResponce(null,errors));
+            return res.json(sendErrorResponce(null, errors));
         }
 
 
         const userData = req.user;
-        const tablename=`td_vehicle_in a,td_receipt b`,
-        where=`b.vehicle_in_id=a.vehicle_in_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}'`;
-        var data=await db_Select('a.*,b.*',tablename,where,null)
+        const tablename = `td_vehicle_in a,td_receipt b`,
+            where = `b.vehicle_in_id=a.vehicle_in_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}'`;
+        var data = await db_Select('a.*,b.*', tablename, where, null)
         console.log(data)
-        res.json(sendOkResponce(data,null));
-    }catch(err){
+        res.json(sendOkResponce(data, null));
+    } catch (err) {
         res.json(sendErrorResponce(err));
     }
 }
 
-module.exports = { vehicle_wise,shift_wise,detail_report,operator_wise, unbilled_report,unbilled };
+module.exports = { vehicle_wise, shift_wise, detail_report, operator_wise, unbilled_report, unbilled };
