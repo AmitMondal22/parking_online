@@ -138,9 +138,11 @@ const operator_wise = async(req, res) => {
 
         var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, f.operator_name opratorName`, 
         table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f', 
-        whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`, 
+        whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`, 
         order = 'GROUP BY a.user_id_in';
         var data = await db_Select(select, table_name, whr, order)
+
+        
 
 
 
