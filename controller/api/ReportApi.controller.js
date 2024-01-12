@@ -91,10 +91,19 @@ const detail_report = async (req, res) => {
 
 
         const userData = req.user;
-        const tablename = `td_vehicle_in a,td_receipt b`,
-            where = `b.vehicle_in_id=a.vehicle_in_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}'`;
-        var data = await db_Select('a.*,b.*', tablename, where, null)
-        console.log(data)
+        // const tablename = `td_vehicle_in a,td_receipt b`,
+        //     where = `b.vehicle_in_id=a.vehicle_in_id AND a.customer_id=${userData.customer_id} AND a.device_id='${userData.device_id}' AND a.user_id_in=${userData.id}  AND date(a.created_at) BETWEEN '${value.from_date}' AND '${value.to_date}'`;
+        // var data = await db_Select('a.*,b.*', tablename, where, null)
+        // console.log(data)
+
+
+        var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, b.date_time_out, b.device_id device_id_out, c.base_amt, c.cgst, c.sgst, c.paid_amt, f.operator_name`, 
+        table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f', 
+        whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`, 
+        order = 'ORDER BY a.receipt_no';
+        var data = await db_Select(select, table_name, whr, order)
+
+
         res.json(sendOkResponce(data, null));
     } catch (err) {
         res.json(sendErrorResponce(err));
