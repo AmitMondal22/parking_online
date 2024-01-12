@@ -44,7 +44,7 @@ const car_in = async (req, res) => {
                 let receipt_insert = await insert_receipt(userData, td_vehicle_in.receipt_number, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'A')
                 console.log(receipt_insert)
                 if (receipt_insert.suc == 1) {
-                    res.json(sendOkResponce({ td_vehicle_in, receipt_insert, td_vehicle_in, receipt_number:td_vehicle_in.receipt_number }, null));
+                    res.json(sendOkResponce({ td_vehicle_in, receipt_insert, td_vehicle_in, receipt_number: td_vehicle_in.receipt_number }, null));
                 } else {
                     res.json(sendErrorResponce(null, { message: 'Not Inserted' }));
                 }
@@ -54,9 +54,9 @@ const car_in = async (req, res) => {
         } else if (md_setting_data.dev_mod == 'D' || md_setting_data.dev_mod == 'R') {
             let td_vehicle_in = await vehicle_in(userData, value.vehicle_id, value.vehicle_no, md_setting_data.dev_mod, md_setting_data.parking_entry_type)
             if (td_vehicle_in.td_vehicle_in.suc == 1) {
-                res.json(sendOkResponce({ td_vehicle_in,receipt_number }, null));
+                res.json(sendOkResponce({ td_vehicle_in, receipt_number }, null));
             } else {
-                res.json(sendErrorResponce(null, { message: td_vehicle_in, })); 
+                res.json(sendErrorResponce(null, { message: td_vehicle_in, }));
             }
         }
     } else {
@@ -107,7 +107,7 @@ const out_pass = async (req, res) => {
         base_amt: Joi.required(),
         cgst: Joi.optional(),
         sgst: Joi.optional(),
-        paid_amt:Joi.required(),
+        paid_amt: Joi.required(),
         gst_flag: Joi.optional(),
 
         vehicle_id: Joi.required(),
@@ -127,21 +127,34 @@ const out_pass = async (req, res) => {
 
 
     let date_time_out = dateFormat(value.date_time_out, "yyyy-mm-dd HH:MM:ss")
-    
-    let vehicle_outpass = await insert_vehicle_outpass(userData, value.device_id, date_time_out, value.receipt_no);
 
-    if (vehicle_outpass.suc == 1) {
-        let receipt = await insert_receipt(userData, value.receipt_no, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'P')
-        
-        if (receipt.suc == 1) {
-            let update_car_in_flag_status = await update_car_in_flag(userData,value.vehicle_id, value.vehicle_no,value.receipt_no)
-            console.log(update_car_in_flag_status)
-            res.json(sendOkResponce({update_car_in_flag_status }, null));
-        }else{
-            res.json(sendErrorResponce(null, { message: receipt }));
+
+
+    let where = `customer_id=${userData.customer_id} AND car_out_flag='N' AND vehicle_no LIKE '%${value.vehicle_no}%'`
+    let search_car = await db_Select('*', 'td_vehicle_in', where, null)
+
+    if (search_car.msg.length == 0) {
+        return res.json(sendErrorResponce(null, { message: 'Car not Found' }));
+    } else {
+
+
+
+        let vehicle_outpass = await insert_vehicle_outpass(userData, value.device_id, date_time_out, value.receipt_no);
+
+        if (vehicle_outpass.suc == 1) {
+            let receipt = await insert_receipt(userData, value.receipt_no, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'P')
+
+            if (receipt.suc == 1) {
+                let update_car_in_flag_status = await update_car_in_flag(userData, value.vehicle_id, value.vehicle_no, value.receipt_no)
+                console.log(update_car_in_flag_status)
+                res.json(sendOkResponce({ update_car_in_flag_status }, null));
+            } else {
+                res.json(sendErrorResponce(null, { message: receipt }));
+            }
+        } else {
+            res.json(sendErrorResponce(null, { message: vehicle_outpass }));
         }
-    }else{
-        res.json(sendErrorResponce(null, { message: vehicle_outpass }));
+
     }
 
 }
