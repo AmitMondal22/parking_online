@@ -85,8 +85,8 @@ const search_car = async (req, res) => {
     let dev_mod = userData.dev_mod;
 
     if (dev_mod == 'D' || dev_mod == 'B') {
-        let where = `customer_id=${userData.customer_id} AND car_out_flag='N' AND vehicle_no LIKE '%${value.vehicle_number}%'`
-        let search_car = await db_Select('*', 'td_vehicle_in', where, null)
+        let where = `a.vehicle_id = b.vehicle_id AND a.customer_id = b.customer_id AND a.customer_id=${userData.customer_id} AND a.car_out_flag='N' AND a.vehicle_no LIKE '%${value.vehicle_number}%'`
+        let search_car = await db_Select('a.*', 'td_vehicle_in a, md_vehicle b', where, null)
 
         res.json(sendOkResponce(search_car, null));
     } else {
