@@ -49,6 +49,28 @@ reportRouter.post('/get_details_report_new', AuthCheckedMW, async (req, res) => 
     res.send(res_dt)
 })
 
+reportRouter.get('/unbilled_report', AuthCheckedMW, async (req, res) => {
+    var data = {
+        title: 'Unbilled Report',
+        page_path:'reports/unbilled_report.ejs',
+        dtFormat: dateFormat
+    }
+    res.render('common/layouts/main', data)
+})
+
+reportRouter.post('/get_unbilled_report', AuthCheckedMW, async (req, res) => {
+    var custId = req.session.user.user_data.customer_id,
+    userType = req.session.user.user_data.user_type;
+    
+    var data = req.body;
+    var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, f.operator_name`, 
+    table_name = 'td_vehicle_in a, md_vehicle d, md_user e, md_operator f', 
+    whr = `a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'N' AND DATE(a.date_time_in) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`, 
+    order = 'ORDER BY a.receipt_no';
+    var res_dt = await db_Select(select, table_name, whr, order)
+    res.send(res_dt)
+})
+
 reportRouter.get('/veh_wise_repo', AuthCheckedMW, async (req, res) => {
     var data = {
         title: 'Veichle Wise Report',
