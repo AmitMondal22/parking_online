@@ -96,7 +96,7 @@ const dashboard = async (req, res) => {
             whr = `a.receipt_no=b.receipt_no AND DATE(a.date_time_in)='2024-01-10' AND a.customer_id = '${userData.customer_id}'`
         var paid_amt = await db_Select(select, table_name, whr, null)
 
-        var select2 = `count(*) as vehicle_in `,
+        var select2 = `count(*) as vehicle_out `,
             table_name2 = 'td_vehicle_in a, td_vehicle_out b ',
             whr2 = `a.receipt_no=b.receipt_no AND DATE(b.date_time_out)='2024-01-10' AND a.customer_id = '${userData.customer_id}'`
         var vehicle_out = await db_Select(select2, table_name2, whr2, null)
