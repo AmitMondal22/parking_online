@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const { db_Select } = require("../../model/Master.model");
 const { sendOkResponce, sendErrorResponce } = require("response-json-format");
+const dateFormat = require('dateformat');
 
 const vehicle_wise = async (req, res) => {
     try {
@@ -69,13 +70,50 @@ const unbilled = async (req, res) => {
         // console.log(data)
 
 
-        var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, f.operator_name`, 
-        table_name = 'td_vehicle_in a, md_vehicle d, md_user e, md_operator f', 
-        whr = `a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'N' AND DATE(a.date_time_in) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`, 
-        order = 'ORDER BY a.receipt_no';
+        var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, f.operator_name`,
+            table_name = 'td_vehicle_in a, md_vehicle d, md_user e, md_operator f',
+            whr = `a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'N' AND DATE(a.date_time_in) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`,
+
+            order = 'ORDER BY a.receipt_no';
         var res_dt = await db_Select(select, table_name, whr, order)
 
 
+        res.json(sendOkResponce(data, null));
+    } catch (err) {
+        res.json(sendErrorResponce(err));
+    }
+}
+
+
+const dashboard = async (req, res) => {
+    try {
+        const userData = req.user;
+        
+        let datetime = dateFormat(new Date(), "yyyy-mm-dd")
+
+        var select = `SUM(b.paid_amt) as paid_amt`,
+            table_name = 'td_vehicle_in a, td_receipt b',
+            whr = `a.receipt_no=b.receipt_no AND DATE(a.date_time_in)='2024-01-10' AND a.customer_id = '${userData.customer_id}'`
+        var paid_amt = await db_Select(select, table_name, whr, null)
+
+        var select2 = `count(*) as vehicle_in `,
+            table_name2 = 'td_vehicle_in a, td_vehicle_out b ',
+            whr2 = `a.receipt_no=b.receipt_no AND DATE(b.date_time_out)='2024-01-10' AND a.customer_id = '${userData.customer_id}'`
+        var vehicle_out = await db_Select(select2, table_name2, whr2, null)
+
+
+
+        var select3 = `count(*) as vehicle_in `,
+            table_name3 = 'td_vehicle_in a',
+            whr3 = `DATE(date_time_in)='2024-01-10' AND a.customer_id = '${userData.customer_id}'`
+        var vehicle_in = await db_Select(select3, table_name3, whr3, null)
+
+        let data={
+            paid_amt,
+            vehicle_in,
+            vehicle_out
+            
+        }
         res.json(sendOkResponce(data, null));
     } catch (err) {
         res.json(sendErrorResponce(err));
@@ -106,10 +144,10 @@ const detail_report = async (req, res) => {
         // console.log(data)
 
 
-        var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, b.date_time_out, b.device_id device_id_out, c.base_amt, c.cgst, c.sgst, c.paid_amt, f.operator_name`, 
-        table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f', 
-        whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`, 
-        order = 'ORDER BY a.receipt_no';
+        var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, b.date_time_out, b.device_id device_id_out, c.base_amt, c.cgst, c.sgst, c.paid_amt, f.operator_name`,
+            table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f',
+            whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`,
+            order = 'ORDER BY a.receipt_no';
         var data = await db_Select(select, table_name, whr, order)
 
 
@@ -217,4 +255,4 @@ const unbilled_report = async (req, res) => {
     }
 }
 
-module.exports = { vehicle_wise, shift_wise, detail_report, operator_wise, unbilled_report, unbilled };
+module.exports = { vehicle_wise, shift_wise, detail_report, operator_wise, unbilled_report, unbilled ,dashboard};
