@@ -93,19 +93,19 @@ const dashboard = async (req, res) => {
 
         var select = `SUM(b.paid_amt) as paid_amt`,
             table_name = 'td_vehicle_in a, td_receipt b',
-            whr = `a.receipt_no=b.receipt_no AND DATE(a.date_time_in)='2024-01-10' AND a.customer_id = '${userData.customer_id}'`
+            whr = `a.receipt_no=b.receipt_no AND DATE(a.date_time_in)='${datetime}' AND a.customer_id = '${userData.customer_id}'`
         var paid_amt = await db_Select(select, table_name, whr, null)
 
         var select2 = `count(*) as vehicle_out `,
             table_name2 = 'td_vehicle_in a, td_vehicle_out b ',
-            whr2 = `a.receipt_no=b.receipt_no AND DATE(b.date_time_out)='2024-01-10' AND a.customer_id = '${userData.customer_id}'`
+            whr2 = `a.receipt_no=b.receipt_no AND DATE(b.date_time_out)='${datetime}' AND a.customer_id = '${userData.customer_id}'`
         var vehicle_out = await db_Select(select2, table_name2, whr2, null)
 
 
 
         var select3 = `count(*) as vehicle_in `,
             table_name3 = 'td_vehicle_in a',
-            whr3 = `DATE(date_time_in)='2024-01-10' AND a.customer_id = '${userData.customer_id}'`
+            whr3 = `DATE(date_time_in)='${datetime}' AND a.customer_id = '${userData.customer_id}'`
         var vehicle_in = await db_Select(select3, table_name3, whr3, null)
 
         let data={
