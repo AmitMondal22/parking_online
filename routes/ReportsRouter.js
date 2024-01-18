@@ -43,7 +43,7 @@ reportRouter.post('/get_details_report_new', AuthCheckedMW, async (req, res) => 
     var data = req.body;
     var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, b.date_time_out, b.device_id device_id_out, c.base_amt, c.cgst, c.sgst, c.paid_amt, f.operator_name`, 
     table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f', 
-    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`, 
+    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`, 
     order = 'ORDER BY a.receipt_no';
     var res_dt = await db_Select(select, table_name, whr, order)
     res.send(res_dt)
@@ -65,7 +65,7 @@ reportRouter.post('/get_unbilled_report', AuthCheckedMW, async (req, res) => {
     var data = req.body;
     var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, f.operator_name`, 
     table_name = 'td_vehicle_in a, md_vehicle d, md_user e, md_operator f', 
-    whr = `a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'N' AND DATE(a.date_time_in) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`, 
+    whr = `a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'N' AND DATE(a.date_time_in) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`, 
     order = 'ORDER BY a.receipt_no';
     var res_dt = await db_Select(select, table_name, whr, order)
     res.send(res_dt)
@@ -188,7 +188,7 @@ reportRouter.post('/get_user_wise_report_new', AuthCheckedMW, async (req, res) =
     var data = req.body;
     var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, f.operator_name opratorName`, 
     table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f', 
-    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.id=f.operator_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`, 
+    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`, 
     order = 'GROUP BY a.user_id_in';
     var res_dt = await db_Select(select, table_name, whr, order)
     res.send(res_dt)
