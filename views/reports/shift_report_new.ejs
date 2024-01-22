@@ -107,7 +107,7 @@
                         // console.log(res)
                         if(res.suc > 0){
                             if(res.msg.length > 0){
-                                $('#searchCred').text(`User Wise Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
+                                $('#searchCred').text(`Shift Wise Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
                                 let i = 1;
                                 for(let dt of res.msg){
                                     paid_amt_tot += dt.tot_amt
