@@ -24,4 +24,5 @@ Customer.get('/vehicle',AuthCheckedMW,vehicle);
 Customer.get('/operator/add',AuthCheckedMW,operator_add);
 Customer.post('/operator/add',AuthCheckedMW,operator_add_post);
 
+
 module.exports = {Customer};
