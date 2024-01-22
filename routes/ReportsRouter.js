@@ -226,9 +226,6 @@ reportRouter.post('/shift_wise_repo', AuthCheckedMW, async (req, res) => {
 
 
     let shift_time=await db_Select('f_time, t_time', 'md_shift', `shift_id=${data.shift_id}`, null)
-
-
-    console.log("llllllllllllllllllll",shift_time)
     let ftime=shift_time.msg[0].f_time;
     let ttime=shift_time.msg[0].t_time;
 
