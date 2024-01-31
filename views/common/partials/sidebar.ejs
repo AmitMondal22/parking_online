@@ -91,6 +91,8 @@
         <li class="nav-small-cap">
           <span class="hide-menu">Reports</span>
         </li>
+
+        <%= if(user.user_data.customer_id=='13'){  %>
         <li class="sidebar-item">
           <a
             class="sidebar-link has-arrow"
@@ -121,6 +123,8 @@
             </li>
           </ul>
         </li>
+
+        <%= }  %>
 
         <li class="sidebar-item">
           <a
