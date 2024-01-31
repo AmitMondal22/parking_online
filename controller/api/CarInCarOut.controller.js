@@ -92,6 +92,7 @@ const car_in_fixed = async (req, res) => {
             let receipt_number = 1;
             if (md_setting_data.dev_mod == 'F') {
                 let td_vehicle_in = await vehicle_in(userData, value.vehicle_id, value.vehicle_no, md_setting_data.dev_mod, md_setting_data.parking_entry_type)
+                console.log(td_vehicle_in)
                 if (td_vehicle_in.td_vehicle_in.suc == 1) {
                     let receipt_insert = await insert_receipt(userData, td_vehicle_in.receipt_number, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'P')
                     if (receipt_insert.suc == 1) {
@@ -107,7 +108,7 @@ const car_in_fixed = async (req, res) => {
                         res.json(sendErrorResponce(null, { message: 'Not Inserted' }));
                     }
                 } else {
-                    res.json(sendErrorResponce(null, { message: 'Inserted' }));
+                    res.json(sendErrorResponce(null, { message: 'Not Inserted' }));
                 }
             }
         } else {
