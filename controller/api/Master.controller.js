@@ -92,9 +92,10 @@ const fixed_rate_dtls_list = async (req, res) => {
             return res.json(sendErrorResponce(null, errors));
         }
         const userData = req.user;
-        let where = `customer_id=${userData.customer_id} AND vehicle_id=${value.vehicle_id}`;
+        let where = `customer_id=${userData.customer_id} AND vehicle_id=${value.vehicle_id}`,
+        order=`ORDER BY from_hour`;
         // let where=`customer_id=${userData.customer_id} AND rate_type='${value.dev_mod}' AND vehicle_id=${value.vehicle_id}`;
-        var data = await db_Select('*', 'md_rate_dtls', where, null)
+        var data = await db_Select('*', 'md_rate_dtls', where, order)
         res.json(sendOkResponce(data, null));
     } catch (error) {
         res.json(sendErrorResponce(error));
