@@ -49,9 +49,9 @@ const login_post = async (req, res) => {
         if (res_dt.msg[0] && await bcrypt.compare(password, res_dt.msg[0].password)) {
 
             if (res_dt.msg[0].user_type == 'C') {
-                var table_name = "md_user a,md_customer b,md_seller c",
-                    whrDAta = `a.customer_id=b.customer_id AND a.seller_id=c.seller_id AND a.user_id='${user_id}' AND a.allow_flag='Y'`,
-                    selectData = "a.user_type, a.id, a.device_id, a.user_id, c.*, b.*";
+                var table_name = "md_user a,md_customer b,md_seller c,md_locations d",
+                    whrDAta = `a.customer_id=b.customer_id AND a.seller_id=c.seller_id AND b.location_id= d.location_id AND a.user_id='${user_id}' AND a.allow_flag='Y'`,
+                    selectData = "a.user_type, a.id, a.device_id, a.user_id, c.*, b.*, d.*";
             }
             let user_data = await db_Select(selectData, table_name, whrDAta, null);
             delete user_data.sql;

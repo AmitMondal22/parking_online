@@ -144,4 +144,40 @@ const test = async (req, res) => {
     }
 }
 
-module.exports = { register, login,change_password, test };
+const check_report_password = async (req, res) =>{
+    try{
+     const schema = Joi.object({
+        password: Joi.required(),
+     });
+     const { error, value } = schema.validate(req.body, { abortEarly: false });
+        if (error) {
+            const errors = {};
+            error.details.forEach(detail => {
+                errors[detail.context.key] = detail.message;
+            });
+            return res.json(sendErrorResponce(errors));
+        }
+
+      
+
+        const userData = req.user;
+
+        let whr = `customer_id=${userData.customer_id} AND password='${value.password}'`
+        var pwdData = await db_Select("*", 'md_setting', whr, null)
+
+        console.log(pwdData);
+        if ((pwdData.msg).length > 0) {
+           let data = {
+            reportpwddata: 1
+           }
+            res.json(sendOkResponce(data, null));
+
+        } else {
+            res.json(sendErrorResponce(null, 'invalid username'));
+        }
+    } catch (error) {
+        res.json(sendErrorResponce(error));
+    }
+}
+
+module.exports = { register, login,change_password, test, check_report_password };

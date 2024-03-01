@@ -139,18 +139,26 @@
                               class="text-dark"><%= user.user_data.customer_name;  %></span> <i data-feather="chevron-down"
                               class="svg-icon"></i></span>
                   </a>
-                  <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
-                      <a class="dropdown-item" href="javascript:void(0)"><i data-feather="user"
+                  <div id="myDropdown" class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
+                      <a class="dropdown-item" href="javascript:void(0)"  data-toggle="modal"
+                      data-target="#myAccount" id="myprofile"><i data-feather="user"
                               class="svg-icon mr-2 ml-1"></i>
                           My Profile</a>
+
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="javascript:void(0)"  data-toggle="modal"
+                        data-target="#changepwd"><i data-feather="lock"
+                                class="svg-icon mr-2 ml-1"></i>
+                                Change
+                                Password</a>
+                          
                       
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="/logout"><i data-feather="power"
                               class="svg-icon mr-2 ml-1"></i>
                           Logout</a>
-                      <div class="dropdown-divider"></div>
-                      <div class="pl-4 p-3"><a href="javascript:void(0)" class="btn btn-sm btn-info">View
-                              Profile</a></div>
+                     
                   </div>
               </li>
               <!-- ============================================================== -->

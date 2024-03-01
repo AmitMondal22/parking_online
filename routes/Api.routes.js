@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, test, change_password } = require('../controller/api/Auth.controller');
+const { register, login, test, change_password, check_report_password } = require('../controller/api/Auth.controller');
 const { checkedToken } = require('../middleware/ApiAuthChecked.middleware');
 const { vehicle_list } = require('../controller/api/Vehicle.controller');
 const { general_settings, receipt_setting, rate_dtls_list, gst_list, fixed_rate_dtls_list, my_shift } = require('../controller/api/Master.controller');
@@ -12,6 +12,7 @@ Api.post('/auth/register', register);
 Api.post('/auth/login', login);
 Api.post('/auth/change_password',checkedToken, change_password);
 Api.post('/auth/testtoken',checkedToken, test);
+Api.post('/auth/check_report_password',checkedToken,check_report_password);
 
 
 Api.post('/vehicle/list',checkedToken, vehicle_list);
@@ -41,6 +42,8 @@ Api.post('/report/operator_wise',checkedToken, operator_wise);
 
 
 Api.post('/report/shift_wise_report',checkedToken, shift_wise_report);
+
+
 
 
 

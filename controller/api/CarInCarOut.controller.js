@@ -124,7 +124,7 @@ const search_car = async (req, res) => {
         vehicle_number: Joi.required()
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
-    if (error) {
+    if (error) {vehicle_number
         const errors = {};
         error.details.forEach(detail => {
             errors[detail.context.key] = detail.message;
@@ -135,9 +135,10 @@ const search_car = async (req, res) => {
     let dev_mod = userData.dev_mod;
 
     if (dev_mod == 'D' || dev_mod == 'B') {
-        let where = `a.vehicle_id = b.vehicle_id AND a.customer_id = b.customer_id AND a.customer_id=${userData.customer_id} AND a.car_out_flag='N' AND a.vehicle_no LIKE '%${value.vehicle_number}%'`
+        // let where = `a.vehicle_id = b.vehicle_id AND a.customer_id = b.customer_id AND a.customer_id=${userData.customer_id} AND a.car_out_flag='N' AND a.vehicle_no LIKE '%${value.vehicle_number}%'`
+        let where = `a.vehicle_id = b.vehicle_id AND a.customer_id = b.customer_id AND a.customer_id=${userData.customer_id} AND a.car_out_flag='N' AND (a.vehicle_no LIKE '%${value.vehicle_number}%' OR a.receipt_no LIKE '%${value.vehicle_number}')`
         let search_car = await db_Select('a.*,b.vehicle_name', 'td_vehicle_in a, md_vehicle b', where, null)
-
+         console.log(search_car);
         res.json(sendOkResponce(search_car, null));
     } else {
         res.json(sendErrorResponce("Car not Found", null));
