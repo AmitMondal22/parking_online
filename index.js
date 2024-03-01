@@ -2,6 +2,8 @@ const express = require('express');
 const { Api } = require('./routes/Api.routes');
 const { Customer } = require('./routes/Customer.routes');
 const { reportRouter } = require('./routes/ReportsRouter');
+const { Header_footerRouter } = require('./routes/Header_footerRouter');
+const { DeviceRouter } = require('./routes/device_settingRouter');
 
 const app = express(),
     session = require('express-session'),
@@ -64,6 +66,9 @@ app.use('/', Customer);
 
 // MODIFY 09/01/2024 SUBHAM
 app.use('/report', reportRouter)
+
+app.use('/header',Header_footerRouter)
+app.use('/device',DeviceRouter)
 
 
 app.get('*', function(req, res){
