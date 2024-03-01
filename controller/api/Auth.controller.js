@@ -162,11 +162,13 @@ const check_report_password = async (req, res) =>{
 
         const userData = req.user;
 
-        let whr = `customer_id=${userData.customer_id} AND password='${value.password}'`
+        // await bcrypt.compare(value.password, res_dt.msg[0].password)
+
+        let whr = `customer_id=${userData.customer_id}`
         var pwdData = await db_Select("*", 'md_setting', whr, null)
 
-        console.log(pwdData);
-        if ((pwdData.msg).length > 0) {
+        console.log(pwdData,"1234");
+        if ((pwdData.msg).length > 0 && await bcrypt.compare(value.password, pwdData.msg[0].password)) {
            let data = {
             reportpwddata: 1
            }
