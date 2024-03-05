@@ -41,6 +41,12 @@ const car_in = async (req, res) => {
             let receipt_number = 1;
             if (md_setting_data.dev_mod == 'D' || md_setting_data.dev_mod == 'R') {
                 let td_vehicle_in = await vehicle_in(userData, value.vehicle_id, value.vehicle_no, md_setting_data.dev_mod, md_setting_data.parking_entry_type)
+
+                // console.log(td_vehicle_in.receipt_number,"***********");
+            if (md_setting_data.adv_pay == 'Y') {
+                let receipt = await insert_receipt(userData, td_vehicle_in.receipt_number, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'A')
+            }    
+
                 if (td_vehicle_in.td_vehicle_in.suc == 1) {
                     res.json(sendOkResponce({ td_vehicle_in, receipt_number }, null));
                 } else {
@@ -132,6 +138,7 @@ const search_car = async (req, res) => {
         return res.json(sendErrorResponce(null, errors));
     }
     const userData = req.user;
+    // console.log(userData);
     let dev_mod = userData.dev_mod;
 
     if (dev_mod == 'D' || dev_mod == 'B') {
@@ -145,6 +152,38 @@ const search_car = async (req, res) => {
     }
 }
 
+
+const car_advance_amount = async (req, res) => {
+    const schema = Joi.object({
+        receipt_no: Joi.required()
+    });
+    const { error, value } = schema.validate(req.body, { abortEarly: false });
+    if (error) {receipt_no
+        const errors = {};
+        error.details.forEach(detail => {
+            errors[detail.context.key] = detail.message;
+        });
+        return res.json(sendErrorResponce(null, errors));
+    }
+    const userData = req.user;
+    console.log(userData);
+    let adv_pay = userData.adv_pay;
+
+    // console.log("/////////////////",adv_pay);
+//   var custId = req.session.user.user_data.customer_id;
+
+
+    if (adv_pay == 'Y') {
+        let where = `a.receipt_no = b.receipt_no
+        AND a.receipt_no = '${value.receipt_no}'
+        AND b.customer_id = ${userData.customer_id}`
+        let outpass_car = await db_Select('a.*,b.*', 'td_receipt a, td_vehicle_in b', where, null)
+         console.log(outpass_car);
+        res.json(sendOkResponce(outpass_car, null));
+    } else {
+        res.json(sendErrorResponce("Car not Found", null));
+    }
+}
 
 
 
@@ -211,4 +250,4 @@ const out_pass = async (req, res) => {
 }
 
 
-module.exports = { car_in, search_car, out_pass, car_in_fixed };
+module.exports = { car_in, search_car, out_pass, car_in_fixed, car_advance_amount };

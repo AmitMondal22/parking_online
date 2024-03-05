@@ -2,10 +2,6 @@
     <div class="row">
       <div class="card col-12">
         <div class="card-body">
-          <div class="titleSec">
-            <button type="button" class="btn btn-primary" id="myBtn"
-              style="float: inline-end;border-radius: 6px;width: 6vw;">Add</button>
-          </div>
           <div class="row mt-4">
             <h2 class="text-dark">Customer Setting</h2>
           </div>
@@ -43,4 +39,54 @@
       </div>
     </div>
   </div>
+
+  <script>
+    $('#cust_name').change(function () {
+      var customer_id = $(this).val()
+      var tbody = $(".show_data tbody");
+      $.ajax({
+        type: "GET",
+        url: "/customer/show_customer_dtls",
+        data: { customer_id: customer_id },
+        success: function (response) {
+          tbody.empty();
+          if (response.suc > 0 && response.msg.length > 0) {
+            $('#myBtn').hide()
+            response.msg.forEach(function (item, index) {
+              var flag = "Y";
+              var row =
+                "<tr>" +
+                "<td class='text-dark'>" +
+                (index + 1) +
+                "</td>" +
+                "<td class='text-dark'>" +
+                item.customer_name +
+                "</td>" +
+                "<td>" +
+                "<h3><span class='badge " + (item.adv_pay == flag ? 'badge-success' : 'badge-danger') + "'>" +
+                (item.adv_pay == flag ? 'Active' : 'Deactive') +
+                "</h3></span>" +
+                "</td>" +
+                "<td><a href='/customer/edit_customer_details?customer_id=" + item.customer_id + "' class='btn btn-info'><i class='fa fa-edit'></i></a></td>" +
+                "</tr>";
+              tbody.append(row);
+            });
+          } else {
+            $('.show_data tbody').append(`
+                <tr>
+                  <td colspan="4" class="text-danger text-center">No data found</td>
+                </tr>
+              `)
+          }
+  
+        },
+        error: function (error) {
+          console.log(error);
+          tbody.empty();
+  
+        },
+      });
+  
+    });
+  </script>
   
