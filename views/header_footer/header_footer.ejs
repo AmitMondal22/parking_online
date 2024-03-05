@@ -36,12 +36,14 @@
                 <th class="text-dark">Footer2 Flag</th>
                 <th class="text-dark">Footer3 Flag</th>
                 <th class="text-dark">Footer4 Flag</th>
+                <th class="text-dark">IN on/off Flag</th>
+                <th class="text-dark">OUT on/off Flag</th>
                 <th class="text-dark">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td colspan="11" class="text-danger text-center">No Data Found</td>
+                <td colspan="13" class="text-danger text-center">No Data Found</td>
               </tr>
             </tbody>
           </table>
@@ -197,8 +199,20 @@
                 data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_4_flag">
             </div>
 
+            <div class="col-md-4 cust-toggle1" style="margin-left: 15vw;">
+              <label for="in_on_off_flag" class="text-dark"><b>IN Receipt</b></label><br>
+              <input type="checkbox" value="Y" id="in_on_off_flag" data-toggle="toggle" data-onstyle="success"
+                data-offstyle="danger" data-on="Active" data-off="Deactive" name="in_on_off_flag">
+            </div>
+
+            <div class="col-md-4 cust-toggle1">
+              <label for="out_on_off_flag" class="text-dark"><b>OUT Receipt</b></label><br>
+              <input type="checkbox" value=1 id="out_on_off_flag" data-toggle="toggle" data-onstyle="success"
+                data-offstyle="danger" data-on="Active" data-off="Deactive" name="out_on_off_flag">
+            </div>
+
           </div>
-          <div class="row">
+          <div class="row mt-5">
             <div class="form-group col-md-3">
               <input type="submit" value="SUBMIT" class="btn btn-primary btn-block" style="margin-left: 32vw;" />
             </div>
@@ -230,6 +244,7 @@
           $('#myBtn').hide()
           response.msg.forEach(function (item, index) {
             var flag = 1;
+            var in_out_flag = 'Y';
             var row =
               "<tr>" +
               "<td class='text-dark'>" +
@@ -277,6 +292,16 @@
               (item.footer4_flag == flag ? 'Active' : 'Deactive') +
               "</h3></span>" +
               "</td>" +
+              "<td>" +
+              "<h3><span class='badge " + (item.IN_on_off == in_out_flag ? 'badge-success' : 'badge-danger') + "'>" +
+              (item.IN_on_off == in_out_flag ? 'Active' : 'Deactive') +
+              "</h3></span>" +
+              "</td>" +
+              "<td>" +
+              "<h3><span class='badge " + (item.OUT_on_off == in_out_flag ? 'badge-success' : 'badge-danger') + "'>" +
+              (item.OUT_on_off == in_out_flag ? 'Active' : 'Deactive') +
+              "</h3></span>" +
+              "</td>" +
               "<td><a href='/header/edit_header_footer_details?customer_id=" + item.customer_id + "' class='btn btn-info'><i class='fa fa-edit'></i></a></td>" +
               "</tr>";
             tbody.append(row);
@@ -284,7 +309,7 @@
         } else {
           $('.show_data tbody').append(`
               <tr>
-                <td colspan="11" class="text-danger text-center">No data found</td>
+                <td colspan="13" class="text-danger text-center">No data found</td>
               </tr>
             `)
         }
