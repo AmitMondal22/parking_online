@@ -65,10 +65,14 @@ const login = async (req, res) => {
             return res.json(sendErrorResponce(errors));
         }
 
-        let whr = `user_id='${value.user_id}' AND allow_flag='Y' AND device_id='${value.device_id}'`
+        let whr = `user_id='${value.user_id}' AND allow_flag='Y' AND user_type='O'`
+        // let whr = `user_id='${value.user_id}' AND allow_flag='Y' AND device_id='${value.device_id}'`
         var userData = await db_Select("password", 'md_user', whr, null)
         if ((userData.msg).length == 1) {
             if (await bcrypt.compare(value.password, userData.msg[0].password)) {
+                
+               let aaa= await db_Insert('md_user',`device_id='${value.device_id}'`,null,whr,1)
+               
                 let table = `md_user a,md_customer b,md_seller c,md_operator d,md_setting e`,
                     selectData = `a.user_type, a.id, a.device_id, a.user_id, c.*, b.*,d.*,e.*`,
                     whr2 = `a.customer_id=b.customer_id AND a.seller_id=c.seller_id AND a.user_id=d.user_id AND e.customer_id=a.customer_id AND e.app_id='${value.device_id}'  AND a.user_id='${value.user_id}' AND a.allow_flag='Y' AND a.device_id='${value.device_id}'`
