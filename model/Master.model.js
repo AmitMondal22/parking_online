@@ -27,6 +27,8 @@ const db_Insert = (table_name, fields, values, whr, flag) => {
     if (flag > 0) {
         sql = `UPDATE ${table_name} SET ${fields} ${tb_whr}`;
         msg = "Updated Successfully !!";
+
+        console.log(sql);
     } else {
         sql = `INSERT INTO ${table_name} ${fields} VALUES ${values}`;
         msg = "Inserted Successfully !!";

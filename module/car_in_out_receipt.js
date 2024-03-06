@@ -35,6 +35,35 @@ const insert_receipt = (userData, receipt_no, base_amt, cgst, sgst, paid_amt, gs
     });
 }
 
+const insert_advance_receipt_update = (userData, receipt_no, base_amt, advance_amt, cgst, sgst, paid_amt, gst_flag, trans_flag) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
+
+            let receipt_fields = `(receipt_no, user_id, base_amt, advance_amt, cgst, sgst, paid_amt, gst_flag, trans_flag, created_at)`,
+                receipt_values = `(${receipt_no},${userData.id},${base_amt},${advance_amt},${cgst}, ${sgst}, ${paid_amt}, '${gst_flag}', '${trans_flag}','${datetime}')`;
+            var receipt = await db_Insert("td_receipt", receipt_fields, receipt_values, null, 0);
+            resolve(receipt);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+const outpass_advance_receipt_update = (userData, receipt_no, base_amt, cgst, sgst, paid_amt, gst_flag, trans_flag) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
+
+            let receipt_fields = `user_id=${userData.id}, base_amt=${base_amt}, cgst=${cgst}, sgst=${sgst}, paid_amt=${paid_amt}, gst_flag='${gst_flag}', trans_flag='${trans_flag}', updated_at='${datetime}'`,
+                where = `receipt_no='${receipt_no}'`;
+            var receipt_update = await db_Insert("td_receipt", receipt_fields, null, where, 1);
+            resolve(receipt_update);
+        } catch (error) {
+            reject(error);
+        }
+    });  
+}
 
 
 const insert_vehicle_outpass = (userData, device_id, date_time_out, receipt_no) => {
@@ -69,4 +98,4 @@ const update_car_in_flag = (userData, vehicle_id, vehicle_no,receipt_no) => {
 
 
 
-module.exports = { vehicle_in, insert_receipt, insert_vehicle_outpass, update_car_in_flag }
+module.exports = { vehicle_in, insert_receipt, insert_vehicle_outpass, update_car_in_flag,insert_advance_receipt_update, outpass_advance_receipt_update }

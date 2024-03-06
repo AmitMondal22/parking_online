@@ -2,7 +2,7 @@ const Joi = require("joi");
 const dateFormat = require('dateformat');
 const { sendOkResponce, sendErrorResponce } = require("../../utils/ResponceAssets");
 const { db_Select } = require("../../model/Master.model");
-const { vehicle_in, insert_receipt, insert_vehicle_outpass, update_car_in_flag } = require("../../module/car_in_out_receipt");
+const { vehicle_in, insert_receipt, insert_vehicle_outpass, update_car_in_flag, insert_advance_receipt_update, outpass_advance_receipt_update } = require("../../module/car_in_out_receipt");
 
 
 const car_in = async (req, res) => {
@@ -44,7 +44,7 @@ const car_in = async (req, res) => {
 
                 // console.log(td_vehicle_in.receipt_number,"***********");
             if (md_setting_data.adv_pay == 'Y') {
-                let receipt = await insert_receipt(userData, td_vehicle_in.receipt_number, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'A')
+                let receipt = await insert_advance_receipt_update(userData, td_vehicle_in.receipt_number, 0, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'A')
             }    
 
                 if (td_vehicle_in.td_vehicle_in.suc == 1) {
@@ -214,6 +214,8 @@ const out_pass = async (req, res) => {
         return res.json(sendErrorResponce(null, errors));
     }
     const userData = req.user;
+    console.log(userData);
+    let adv_pay = userData.adv_pay;
 
 
     let date_time_out = dateFormat(value.date_time_out, "yyyy-mm-dd HH:MM:ss")
@@ -232,7 +234,13 @@ const out_pass = async (req, res) => {
         let vehicle_outpass = await insert_vehicle_outpass(userData, value.device_id, date_time_out, value.receipt_no);
 
         if (vehicle_outpass.suc == 1) {
-            let receipt = await insert_receipt(userData, value.receipt_no, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'P')
+             if(adv_pay == 'Y'){
+                var receipt = await outpass_advance_receipt_update(userData, value.receipt_no, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'A')
+             }else {
+                var receipt = await insert_receipt(userData, value.receipt_no, value.base_amt, value.cgst, value.sgst, value.paid_amt, value.gst_flag, 'P')
+
+             }
+
 
             if (receipt.suc == 1) {
                 let update_car_in_flag_status = await update_car_in_flag(userData, value.vehicle_id, value.vehicle_no, value.receipt_no)
