@@ -47,11 +47,12 @@ reportRouter.post('/get_details_report_new', AuthCheckedMW, async (req, res) => 
         userType = req.session.user.user_data.user_type;
 
     var data = req.body;
-    var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, b.date_time_out, b.device_id device_id_out, c.base_amt, c.cgst, c.sgst, c.paid_amt, f.operator_name`,
+    var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, b.date_time_out, b.device_id device_id_out, c.base_amt, c.advance_amt, c.cgst, c.sgst, c.paid_amt, f.operator_name`,
         table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f',
         whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`,
         order = 'ORDER BY a.receipt_no';
     var res_dt = await db_Select(select, table_name, whr, order)
+    console.log(res_dt);
     res.send(res_dt)
 })
 

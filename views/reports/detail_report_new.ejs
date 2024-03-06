@@ -41,7 +41,9 @@
                                     <th scope="col">Vehicle No.</th>
                                     <th scope="col">Date Time Out</th>
                                     <th scope="col">Mechine Sl. No. Out</th>
-                                    <th scope="col">Amount</th>
+                                    <th scope="col">Advance Amount</th>
+                                    <th scope="col">Paid Amount</th>
+                                    <th scope="col">Net Amount</th>
                                     <th scope="col">Operator Name</th>
                                 </tr>
                             </thead>
@@ -52,6 +54,8 @@
                             <tfoot>
                                 <tr>
                                     <td scope="col" colspan="8">Total</td>
+                                    <td scope="col" id="advance_amt"><b>0</b></td>
+                                    <td scope="col" id="paid_amt"><b>0</b></td>
                                     <td scope="col" id="tot_amt"><b>0</b></td>
                                     <td></td>
                                 </tr>   
@@ -89,6 +93,9 @@
                     success: function (result) {
                         var res = JSON.parse(result);
                         var paid_amt_tot = 0;
+                        var advance_amt_tot = 0;
+                        var total_amt_tot = 0;
+                        var tot_amt_tot = 0 ;
                         $('#resultDiv').show()
                         // console.log(res)
                         if(res.suc > 0){
@@ -96,7 +103,11 @@
                                 $('#searchCred').text(`Detail Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
                                 let i = 1;
                                 for(let dt of res.msg){
+                                    advance_amt_tot += dt.advance_amt
                                     paid_amt_tot += dt.paid_amt
+                                    total_amt_tot = (dt.paid_amt+dt.advance_amt)
+                                    tot_amt_tot += total_amt_tot
+
                                     $('#resultDiv table tbody').append(`
                                     <tr>
                                         <td>${i}</td>
@@ -107,15 +118,19 @@
                                         <td>${dt.vehicle_no}</td>
                                         <td>${createDateTime(dt.date_time_out)}</td>
                                         <td>${dt.device_id_out}</td>
+                                        <td>${dt.advance_amt}</td>
                                         <td>${dt.paid_amt}</td>
+                                        <td>${total_amt_tot}</td>
                                         <td>${dt.operator_name}</td>
                                     </tr>
                                     `)
                                     i++
                                 }
-                                $('#tot_amt').text(paid_amt_tot)
+                                $('#advance_amt').text(advance_amt_tot)
+                                $('#paid_amt').text(paid_amt_tot)
+                                $('#tot_amt').text(tot_amt_tot)
                             }else{
-                                $('#resultDiv table tbody').append('<tr><td colspan="10" class="text-center text-danger">No Data Found</td></tr>')
+                                $('#resultDiv table tbody').append('<tr><td colspan="12" class="text-center text-danger">No Data Found</td></tr>')
                             }
                         }
                     },
