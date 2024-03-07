@@ -23,7 +23,7 @@ const cust_name = async (req, res) =>{
 const show_customer = async (req, res) => {
   try {
     var custId = req.session.user.user_data.customer_id;
-    let select = "DISTINCT a.customer_id,b.customer_name,a.adv_pay",
+    let select = "DISTINCT a.customer_id,b.customer_name,a.adv_pay,a.grace_period_flag,a.grace_value",
       table_name = "md_setting a, md_customer b",
       whr = `a.customer_id = b.customer_id AND a.customer_id=${custId}`;
     const customer = await db_Select(select, table_name, whr, null);
@@ -39,7 +39,7 @@ const show_customer = async (req, res) => {
 
 const edit_customer = async (req, res) => {
   var custId = req.session.user.user_data.customer_id;
-  let select = "DISTINCT a.customer_id,b.customer_name,a.adv_pay",
+  let select = "DISTINCT a.customer_id,b.customer_name,a.adv_pay,a.grace_period_flag,a.grace_value",
     table_name = "md_setting a, md_customer b",
     whr = `a.customer_id = b.customer_id AND a.customer_id=${custId}`;
   const resData = await db_Select(select, table_name, whr, null);
@@ -60,6 +60,8 @@ const edit_save_customer = async (req, res) => {
     const schema = Joi.object({
       cust_id: Joi.optional(),
       adv_pay_flag: Joi.string(),
+      grace_flag: Joi.string(),
+      grace_value: Joi.optional(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     console.log(value);
@@ -74,8 +76,10 @@ const edit_save_customer = async (req, res) => {
     const datetime = dateFormat(new Date(), "yyyy-mm-dd");
 
     let fields = `adv_pay='${
-        value.adv_pay_flag == 'Y' ? 'Y' : 'N'
-      }',updated_at='${datetime}'`,
+      value.adv_pay_flag && value.adv_pay_flag == 'Y' ? 'Y' : 'N'
+      }',grace_period_flag='${
+        value.grace_flag == 'Y' ? 'Y' : 'N'
+      }',grace_value=${value.grace_value != '' ? `'${value.grace_value}'` : 0},updated_at='${datetime}'`,
       where = `customer_id='${value.cust_id}'`;
     let res_dt2 = await db_Insert("md_setting", fields, null, where, 1);
     // console.log(res_dt2);

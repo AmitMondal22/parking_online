@@ -5,6 +5,7 @@ const { reportRouter } = require('./routes/ReportsRouter');
 const { Header_footerRouter } = require('./routes/Header_footerRouter');
 const { DeviceRouter } = require('./routes/device_settingRouter');
 const { Customer_settingRouter } = require('./routes/Customer_settingRouter');
+const { Manage_operatorRouter } = require('./routes/Manage_operatorRouter');
 
 const app = express(),
     session = require('express-session'),
@@ -71,6 +72,7 @@ app.use('/report', reportRouter)
 app.use('/header',Header_footerRouter)
 app.use('/device',DeviceRouter)
 app.use('/customer',Customer_settingRouter)
+app.use('/operator',Manage_operatorRouter)
 
 
 app.get('*', function(req, res){

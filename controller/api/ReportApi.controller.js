@@ -30,7 +30,7 @@ const vehicle_wise = async (req, res) => {
 
 
 
-        var select = `d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, (c.advance_amt) advance_amt`,
+        var select = `d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, SUM(c.advance_amt) advance_amt`,
             table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d',
             whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`,
             order = 'GROUP BY a.vehicle_id';
@@ -176,11 +176,11 @@ const shift_wise = async (req, res) => {
 
 
         const userData = req.user;
-        const select = `a.shift_name, (SELECT COUNT(*) FROM td_vehicle_in AS b, td_receipt AS e WHERE e.vehicle_in_id = b.vehicle_in_id AND date (b.date_time_in) >= '${value.from_date}' AND date(b.date_time_in) <= '${value.to_date}' AND time(b.date_time_in) >= a.f_time AND time(b.date_time_in) <= a.t_time) AS quantity, (SELECT SUM(f.paid_amt) FROM td_vehicle_in AS c, td_receipt AS f WHERE f.vehicle_in_id = c.vehicle_in_id AND f.trans_flag = 'P' AND date(c.date_time_in) >= '${value.from_date}' AND date(c.date_time_in) <= '${value.to_date}' AND time(c.date_time_in) >= a.f_time AND time(c.date_time_in) <= a.t_time) AS totalAmount, (SELECT SUM(g.paid_amt) FROM td_vehicle_in AS d, td_receipt AS g WHERE g.vehicle_in_id = d.vehicle_in_id AND g.trans_flag = 'A' AND date(d.date_time_in) >= '${value.from_date}' AND date(d.date_time_in) <= '${value.to_date}' AND time(d.date_time_in) >= a.f_time AND time(d.date_time_in) <= a.t_time) AS TotalAdvance , h.operator_name,h.user_id`,
+        const select = `a.shift_name, (SELECT COUNT(*) FROM td_vehicle_in AS b, td_receipt AS e WHERE e.vehicle_in_id = b.vehicle_in_id AND date (b.date_time_in) >= '${value.from_date}' AND date(b.date_time_in) <= '${value.to_date}' AND time(b.date_time_in) >= a.f_time AND time(b.date_time_in) <= a.t_time) AS quantity, (SELECT SUM(f.paid_amt) FROM td_vehicle_in AS c, td_receipt AS f WHERE f.vehicle_in_id = c.vehicle_in_id AND f.trans_flag = 'P' AND date(c.date_time_in) >= '${value.from_date}' AND date(c.date_time_in) <= '${value.to_date}' AND time(c.date_time_in) >= a.f_time AND time(c.date_time_in) <= a.t_time) AS totalAmount, (SELECT SUM(g.advance_amt) FROM td_vehicle_in AS d, td_receipt AS g WHERE g.vehicle_in_id = d.vehicle_in_id AND g.trans_flag = 'A' AND date(d.date_time_in) >= '${value.from_date}' AND date(d.date_time_in) <= '${value.to_date}' AND time(d.date_time_in) >= a.f_time AND time(d.date_time_in) <= a.t_time) AS TotalAdvance , h.operator_name,h.user_id`,
             tablename = `md_shift AS a, md_operator AS h `,
             where = `h.customer_id=a.customer_id AND h.customer_id=${userData.customer_id}`;
         var data = await db_Select(select, tablename, where, null)
-        console.log(data)
+        console.log(data,"lalalalalalalal")
         res.json(sendOkResponce(data, null));
     } catch (err) {
         res.json(sendErrorResponce(err));
@@ -206,7 +206,7 @@ const operator_wise = async (req, res) => {
 
         const userData = req.user;
 
-        var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, c.advance_amt as adv_amt, f.operator_name opratorName`,
+        var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, SUM(c.advance_amt) as adv_amt, f.operator_name opratorName`,
             table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f',
             whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`,
             order = 'GROUP BY a.user_id_in';
@@ -269,7 +269,7 @@ const shift_wise_report = async (req, res) => {
         let ftime = shift_time.msg[0].f_time;
         let ttime = shift_time.msg[0].t_time;
 
-        var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, f.operator_name opratorName`,
+        var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, SUM(c.advance_amt) advance_amt, f.operator_name opratorName`,
             table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f',
             whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND TIME(b.date_time_out) BETWEEN '${ftime}' AND '${ttime}' AND a.customer_id = '${custId}'`,
             order = 'GROUP BY a.user_id_in';

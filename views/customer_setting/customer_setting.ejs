@@ -25,12 +25,13 @@
                   <th class="text-dark">Sl. No.</th>
                   <th class="text-dark">Cust Name</th>
                   <th class="text-dark">Advance Flag</th>
+                  <th class="text-dark">Grace Period Flag</th>
                   <th class="text-dark">Action</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td colspan="4" class="text-danger text-center">No Data Found</td>
+                  <td colspan="5" class="text-danger text-center">No Data Found</td>
                 </tr>
               </tbody>
             </table>
@@ -65,6 +66,11 @@
                 "<td>" +
                 "<h3><span class='badge " + (item.adv_pay == flag ? 'badge-success' : 'badge-danger') + "'>" +
                 (item.adv_pay == flag ? 'Active' : 'Deactive') +
+                "</h3></span>" +
+                "</td>" +
+                "<td>" +
+                "<h3><span class='badge " + (item.grace_period_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
+                (item.grace_period_flag == flag ? 'Active' : 'Deactive') +
                 "</h3></span>" +
                 "</td>" +
                 "<td><a href='/customer/edit_customer_details?customer_id=" + item.customer_id + "' class='btn btn-info'><i class='fa fa-edit'></i></a></td>" +

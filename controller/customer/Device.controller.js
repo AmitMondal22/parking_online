@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const dateFormat = require("dateformat");
 const { db_Select, db_Insert } = require("../../model/Master.model");
+const bcrypt = require('bcrypt');
 
 const device = async (req, res) => {
   try {
@@ -84,8 +85,10 @@ const save_edit_device = async (req, res) => {
 
     var custId = req.session.user.user_data.customer_id;
     const datetime = dateFormat(new Date(), "yyyy-mm-dd");
+    var password = bcrypt.hashSync(data.pwd, 10);
 
-    let fields = `report_flag='${
+
+    let fields = `password='${password}',report_flag='${
         value.report_flag == "Y" ? "Y" : "N"
       }',total_collection='${value.tot_col == "Y" ? "Y" : "N"}',adv_pay='${
         value.ad_pay == "Y" ? "Y" : "N"
