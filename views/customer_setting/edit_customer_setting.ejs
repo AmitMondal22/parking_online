@@ -38,8 +38,8 @@
                 <div class="col-md-4" id="hide_grace">
                   <div class="form-group">
                       <label for="grace_value" class="text-dark"><b>Grace Value &nbsp;<span class=text-danger>(In Minute)</span></b></label>
-                      <input type="time" name="grace_value" id="grace_value" class="form-control"
-                          value="">
+                      <input type="text" name="grace_value" id="grace_value" class="form-control"
+                          value="<%= data.grace_value != '' ? (data.grace_value.split(':').length > 0 ? data.grace_value.split(':')[1] : 0) : 0 %>">
                   </div>
               </div>
             </div>
@@ -68,7 +68,7 @@ $('#grace_flag').on('change', function(){
     $('#grace_value').attr('required', 'required')
   }else{
     $('#grace_value').removeAttr('required')
-    $('#grace_value').val('0')
+    $('#grace_value').val('00')
     $('#hide_grace').hide()
   }
 })
@@ -77,9 +77,13 @@ $('#grace_flag').on('change', function(){
 
 <script>
   $(document).ready(function () {
+    <% if(data.grace_period_flag!='Y'){ %>
+      $('#grace_value').removeAttr('required')
+      $('#grace_value').val('00')
+      $('#hide_grace').hide()
+    <% } %>
     $("#back").click(function () {
       window.location.href = "/customer/customer_dt";
     });
-    $('#grace_flag').change()
   });
 </script>

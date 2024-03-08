@@ -28,22 +28,12 @@
               <tr>
                 <th class="text-dark">Sl. No.</th>
                 <th class="text-dark">Cust Name</th>
-                <th class="text-dark">Header1 Flag</th>
-                <th class="text-dark">Header2 Flag</th>
-                <th class="text-dark">Header3 Flag</th>
-                <th class="text-dark">Header4 Flag</th>
-                <th class="text-dark">Footer1 Flag</th>
-                <th class="text-dark">Footer2 Flag</th>
-                <th class="text-dark">Footer3 Flag</th>
-                <th class="text-dark">Footer4 Flag</th>
-                <th class="text-dark">IN on/off Flag</th>
-                <th class="text-dark">OUT on/off Flag</th>
                 <th class="text-dark">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td colspan="13" class="text-danger text-center">No Data Found</td>
+                <td colspan="3" class="text-danger text-center">No Data Found</td>
               </tr>
             </tbody>
           </table>
@@ -253,55 +243,7 @@
               "<td class='text-dark'>" +
               item.customer_name +
               "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.header1_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.header1_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.header2_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.header2_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.header3_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.header3_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.header4_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.header4_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.footer1_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.footer1_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.footer2_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.footer2_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.footer3_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.footer3_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.footer4_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.footer4_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.IN_on_off == in_out_flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.IN_on_off == in_out_flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3><span class='badge " + (item.OUT_on_off == in_out_flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.OUT_on_off == in_out_flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
+             
               "<td><a href='/header/edit_header_footer_details?customer_id=" + item.customer_id + "' class='btn btn-info'><i class='fa fa-edit'></i></a></td>" +
               "</tr>";
             tbody.append(row);

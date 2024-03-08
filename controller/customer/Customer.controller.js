@@ -79,14 +79,14 @@ const edit_save_customer = async (req, res) => {
       value.adv_pay_flag && value.adv_pay_flag == 'Y' ? 'Y' : 'N'
       }',grace_period_flag='${
         value.grace_flag == 'Y' ? 'Y' : 'N'
-      }',grace_value=${value.grace_value != '' ? `'${value.grace_value}'` : 0},updated_at='${datetime}'`,
+      }',grace_value=${value.grace_value != '' ? `'00:${value.grace_value}:00'` : 0},updated_at='${datetime}'`,
       where = `customer_id='${value.cust_id}'`;
     let res_dt2 = await db_Insert("md_setting", fields, null, where, 1);
     // console.log(res_dt2);
     req.flash("success", "Updated successful");
     res.redirect("/customer/customer_dt");
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     req.flash("error", "Data not Updated Successfully");
     res.redirect("/customer/customer_dt");
   }
