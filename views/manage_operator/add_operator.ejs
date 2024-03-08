@@ -9,7 +9,7 @@
           <div class="row mt-4">
             <h2 class="text-dark">Manage Operator</h2>
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive mt-3">
             <table id="example" class="table table-striped table-bordered show_data" style="width:100%">
               <thead>
                 <tr>
@@ -84,9 +84,15 @@
 
               <div class="form-group col-6">
                 <label for="pwd" class="text-dark"><b>Password:</b></label>
+                <div class="input-group">
                 <input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="Enter Password">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                      <i class="fa fa-eye-slash"></i>
+                  </button>
               </div>
-
+              </div>
+            </div>
           </div>
           <div class="row mt-3">
             <div class="form-group col-md-3">
@@ -99,6 +105,17 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById("togglePassword").addEventListener("click", function() {
+      const pwdField = document.getElementById("pwd");
+      if (pwdField.type === "password") {
+          pwdField.type = "text";
+      } else {
+          pwdField.type = "password";
+      }
+  });
+</script>
 
 
 <script>

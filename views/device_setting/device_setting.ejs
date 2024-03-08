@@ -29,13 +29,9 @@
           <table id="example" class="table table-striped table-bordered show_data" style="width:100%">
             <thead>
               <tr>
-                <th class="text-dark">Sl. No.</th>
-                <th class="text-dark">Customer Name</th>
-                <th class="text-dark">App ID</th>
-                <th class="text-dark">Dev Mode</th>
-                <th class="text-dark">Report Flag</th>
-                <th class="text-dark">Total Collection</th>
-                <th class="text-dark">Action</th>
+                <th class="text-dark text-center">Sl. No.</th>
+                <th class="text-dark text-center">App ID</th>
+                <th class="text-dark text-center">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -84,12 +80,13 @@
                 <input type="text" class="form-control" id="app_id" name="app_id" placeholder="Enter Device ID...." value="">
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-group">
-                <label for="dev_mode" class="text-dark"><b>Dev Mode</b></label>
+                <label for="dev_mode" class="text-dark"><b>Mode</b></label>
                 <select name="dev_mode" class="form-control" id="dev_mode" required>
-                  <option value="">Select Customer Name</option>
+                  <option value="">Select Device Mode</option>
                   <option value="D">Normal</option>
+                  <option value="F">Toll Naka</option>
                 </select>
               </div>
             </div>
@@ -106,7 +103,7 @@
             </div>
 
           </div>
-          <div class="row mt-5">
+          <div class="row mt-3">
             <div class="form-group col-md-3">
               <input type="submit" value="SUBMIT" class="btn btn-primary btn-block" style="margin-left: 32vw;" />
             </div>
@@ -153,25 +150,7 @@
               (index + 1) +
               "</td>" +
               "<td class='text-dark text-center'>" +
-              item.customer_name +
-              "</td>" +
-              "<td class='text-dark text-center'>" +
               item.app_id +
-              "</td>" +
-              "<td>" +
-              "<h3 class='text-center'><span class='badge " + (item.dev_mod == dev ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.dev_mod == dev ? 'Normal' : 'Fixed') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3 class='text-center'><span class='badge " + (item.report_flag == flag ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.report_flag == flag ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3 class='text-center'><span class='badge " + (item.total_collection == tot ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.total_collection == tot ? 'Active' : 'Deactive') +
-              "</h3></span>" +
               "</td>" +
               "<td class='text-center'><a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='btn btn-info' style='border-radius:5px'><i class='fa fa-edit'></i></a></td>" +
               "</tr>";
@@ -180,7 +159,7 @@
         } else {
           $('.show_data tbody').append(`
               <tr>
-                <td colspan="11" class="text-danger text-center">No data found</td>
+                <td colspan="3" class="text-danger text-center">No data found</td>
               </tr>
             `)
         }

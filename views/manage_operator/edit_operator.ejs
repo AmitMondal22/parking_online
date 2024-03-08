@@ -24,7 +24,14 @@
   
                 <div class="form-group col-6">
                   <label for="pwd" class="text-dark"><b>Password:</b></label>
+                  <div class="input-group">
                   <input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="Enter Password">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="fa fa-eye-slash"></i>
+                    </button>
+                </div>
+                </div>
                 </div>
               
           </div>
@@ -42,6 +49,17 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.getElementById("togglePassword").addEventListener("click", function() {
+        const pwdField = document.getElementById("pwd");
+        if (pwdField.type === "password") {
+            pwdField.type = "text";
+        } else {
+            pwdField.type = "password";
+        }
+    });
+  </script>
 
   <script>
     $(document).ready(function () {
