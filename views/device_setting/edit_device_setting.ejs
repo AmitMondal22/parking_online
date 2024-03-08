@@ -29,13 +29,8 @@
                                     value="<%= data.app_id %>" readonly>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="pwd" class="text-dark"><b>Password</b></label>
-                            <input type="password" id="pwd" name="pwd" class="form-control" value="<%= data.password %>"
-                                >
-                        </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="dev_mode" class="text-dark"><b>Dev Mode</b></label>
                                 <select name="dev_mode" class="form-control" id="dev_mode" disabled>
@@ -59,13 +54,7 @@
                                 <%=(data.total_collection=='Y' )?'checked':''%>
                             >
                         </div>
-                        <div class="col-md-3 cust-toggle1">
-                            <label for="ad_pay" class="text-dark"><b>Advance pay Flag</b></label><br>
-                            <input type="checkbox" value="Y" id="ad_pay" data-toggle="toggle" data-onstyle="success"
-                                data-offstyle="danger" data-on="Active" data-off="Deactive" name="ad_pay"
-                                <%=(data.adv_pay=='Y' )?'checked':''%>
-                            >
-                        </div>
+                        
                         <div class="row mt-5">
                             <div class="form-group col-md-6">
                                 <input type="submit" value="SUBMIT" class="btn btn-primary btn-block text-center"

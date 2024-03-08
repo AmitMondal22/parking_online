@@ -67,11 +67,9 @@ const save_edit_device = async (req, res) => {
     const schema = Joi.object({
       cust_id: Joi.string(),
       app_id: Joi.string(),
-      pwd: Joi.string(),
       dev_mode: Joi.string(),
       report_flag: Joi.string(),
       tot_col: Joi.string(),
-      ad_pay: Joi.string(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     // console.log(value);
@@ -85,21 +83,19 @@ const save_edit_device = async (req, res) => {
 
     var custId = req.session.user.user_data.customer_id;
     const datetime = dateFormat(new Date(), "yyyy-mm-dd");
-    var password = bcrypt.hashSync(data.pwd, 10);
+    // var password = bcrypt.hashSync(value.pwd, 10);
 
 
-    let fields = `password='${password}',report_flag='${
+    let fields = `report_flag='${
         value.report_flag == "Y" ? "Y" : "N"
-      }',total_collection='${value.tot_col == "Y" ? "Y" : "N"}',adv_pay='${
-        value.ad_pay == "Y" ? "Y" : "N"
-      }',modified_by=${custId},updated_at='${datetime}'`,
+      }',total_collection='${value.tot_col == "Y" ? "Y" : "N"}',modified_by='${custId}',updated_at='${datetime}'`,
       where = `customer_id='${custId}' AND app_id='${value.app_id}'`;
     let res_dt2 = await db_Insert("md_setting", fields, null, where, 1);
     // console.log(res_dt2);
     req.flash("success", "Updated successful");
     res.redirect("/device/device_name");
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     req.flash("error", "Data not Updated Successfully");
     res.redirect("/device/device_name");
   }
@@ -110,7 +106,6 @@ const save_add_device = async (req, res) => {
     const schema = Joi.object({
       cust_id: Joi.string(),
       app_id: Joi.string(),
-      pwd: Joi.string(),
       dev_mode: Joi.string(),
       report_flag: Joi.string(),
       tot_col: Joi.string(),
@@ -130,11 +125,11 @@ const save_add_device = async (req, res) => {
     var custId = req.session.user.user_data.customer_id;
 
     // console.log(value)
-    let fields = "(customer_id,app_id,password,dev_mod,report_flag,total_collection,adv_pay,created_at)",
-      values = `('${custId}','${value.app_id}','${value.pwd}','${value.dev_mode == "D" ? "D" : "F"}',
+    let fields = "(customer_id,app_id,dev_mod,report_flag,total_collection,created_at)",
+      values = `('${custId}','${value.app_id}','${value.dev_mode == "D" ? "D" : "F"}',
       '${value.report_flag == "Y" ? "Y" : "N"}','${
         value.tot_col == "Y" ? "Y" : "N"
-      }','${value.ad_pay == "Y" ? "Y" : "N"}','${datetime}')`;
+      }','${datetime}')`;
     let res_dt = await db_Insert("md_setting", fields, values, null, 0);
     // console.log("========device==========", res_dt);
     req.flash("success", "Saved successful");

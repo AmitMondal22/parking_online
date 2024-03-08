@@ -35,7 +35,6 @@
                 <th class="text-dark">Dev Mode</th>
                 <th class="text-dark">Report Flag</th>
                 <th class="text-dark">Total Collection</th>
-                <th class="text-dark">Advance Pay</th>
                 <th class="text-dark">Action</th>
               </tr>
             </thead>
@@ -87,18 +86,10 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="pwd" class="text-dark"><b>Password</b></label>
-                <input type="password" class="form-control" id="pwd" name="pwd" value="<%= data.msg[0].password %>"
-                  readonly>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
                 <label for="dev_mode" class="text-dark"><b>Dev Mode</b></label>
                 <select name="dev_mode" class="form-control" id="dev_mode" required>
                   <option value="">Select Customer Name</option>
                   <option value="D">Normal</option>
-                  <option value="F">Fixed</option>
                 </select>
               </div>
             </div>
@@ -112,11 +103,6 @@
               <label for="tot_col" class="text-dark"><b>Total collection Flag</b></label><br>
               <input type="checkbox" value="Y" id="tot_col" data-toggle="toggle" data-onstyle="success"
                 data-offstyle="danger" data-on="Active" data-off="Deactive" name="tot_col">
-            </div>
-            <div class="col-md-4 cust-toggle1">
-              <label for="ad_pay" class="text-dark"><b>Advance Pay Flag</b></label><br>
-              <input type="checkbox" value="Y" id="ad_pay" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="ad_pay">
             </div>
 
           </div>
@@ -185,11 +171,6 @@
               "<td>" +
               "<h3 class='text-center'><span class='badge " + (item.total_collection == tot ? 'badge-success' : 'badge-danger') + "'>" +
               (item.total_collection == tot ? 'Active' : 'Deactive') +
-              "</h3></span>" +
-              "</td>" +
-              "<td>" +
-              "<h3 class='text-center'><span class='badge " + (item.adv_pay == pay ? 'badge-success' : 'badge-danger') + "'>" +
-              (item.adv_pay == pay ? 'Active' : 'Deactive') +
               "</h3></span>" +
               "</td>" +
               "<td class='text-center'><a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='btn btn-info' style='border-radius:5px'><i class='fa fa-edit'></i></a></td>" +

@@ -97,11 +97,13 @@ const save_report_password = async (req, res) => {
     // console.log(data);
 
     const userData = req.user;
+    var custId = req.session.user.user_data.customer_id;
+
     // console.log(userData,'1234');
     const datetime = dateFormat(new Date(), "yyyy-mm-dd");
     var password = bcrypt.hashSync(data.pwd, 10);
-    let fields = `password = '${password}',modified_by=${data.cust_id},updated_at='${datetime}'`,
-      where = `customer_id='${data.cust_id}' AND app_id='${data.app_id}' AND setting_id='${data.set_id}'`;
+    let fields = `password = '${password}',modified_by=${custId},updated_at='${datetime}'`,
+      where = `customer_id='${custId}' AND app_id='${data.app_id}'`;
     let res_dt = await db_Insert("md_setting", fields, null, where, 1);
     // console.log(res_dt);
     res.redirect("/password");
