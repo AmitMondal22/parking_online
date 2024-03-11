@@ -2,8 +2,7 @@ const { shift, save_add_shift, edit_shift, save_edit_shift } = require('../contr
 const { AuthCheckedMW } = require('../middleware/AuthChecked.middleware');
 
 const express = require('express'),
-ShiftRouter = express.Router(),
-dateFormat = require('dateformat');
+ShiftRouter = express.Router();
 
 ShiftRouter.get('/shift_details',AuthCheckedMW,shift);
 ShiftRouter.post('/add_save_shift',AuthCheckedMW,save_add_shift);
