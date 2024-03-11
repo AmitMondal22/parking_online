@@ -71,7 +71,7 @@ app.use('/report', reportRouter)
 
 app.use('/header',Header_footerRouter)
 app.use('/device',DeviceRouter)
-app.use('/customer',Customer_settingRouter)
+// app.use('/customer',Customer_settingRouter)
 app.use('/operator',Manage_operatorRouter)
 
 

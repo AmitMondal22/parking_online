@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const dateFormat = require("dateformat");
 const { db_Select, db_Insert } = require("../../model/Master.model");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const device = async (req, res) => {
   try {
@@ -58,7 +58,7 @@ const edit_device = async (req, res) => {
     data: resData.suc > 0 && resData.msg.length > 0 ? resData.msg[0] : [],
     customer_id: custId,
   };
-  // console.log(viewData);
+  console.log(viewData);
   res.render("common/layouts/main", viewData);
 };
 
@@ -70,9 +70,12 @@ const save_edit_device = async (req, res) => {
       dev_mode: Joi.string(),
       report_flag: Joi.string(),
       tot_col: Joi.string(),
+      adv_pay_flag: Joi.string(),
+      grace_flag: Joi.string(),
+      grace_value: Joi.string(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
-    // console.log(value);
+    console.log(value);
     if (error) {
       const errors = {};
       error.details.forEach((detail) => {
@@ -85,13 +88,18 @@ const save_edit_device = async (req, res) => {
     const datetime = dateFormat(new Date(), "yyyy-mm-dd");
     // var password = bcrypt.hashSync(value.pwd, 10);
 
-
     let fields = `report_flag='${
         value.report_flag == "Y" ? "Y" : "N"
-      }',total_collection='${value.tot_col == "Y" ? "Y" : "N"}',modified_by='${custId}',updated_at='${datetime}'`,
+      }',total_collection='${value.tot_col == "Y" ? "Y" : "N"}',adv_pay='${
+        value.adv_pay_flag && value.adv_pay_flag == "Y" ? "Y" : "N"
+      }',grace_period_flag='${
+        value.grace_flag == "Y" ? "Y" : "N"
+      }',grace_value=${
+        value.grace_value != "" ? `'00:${value.grace_value}:00'` : 0
+      },modified_by='${custId}',updated_at='${datetime}'`,
       where = `customer_id='${custId}' AND app_id='${value.app_id}'`;
     let res_dt2 = await db_Insert("md_setting", fields, null, where, 1);
-    // console.log(res_dt2);
+    console.log(res_dt2);
     req.flash("success", "Updated successful");
     res.redirect("/device/device_name");
   } catch (error) {
@@ -106,10 +114,12 @@ const save_add_device = async (req, res) => {
     const schema = Joi.object({
       cust_id: Joi.string(),
       app_id: Joi.string(),
-      dev_mode: Joi.string(),
+      dev_mode: Joi.optional(),
       report_flag: Joi.string(),
       tot_col: Joi.string(),
-      ad_pay: Joi.string(),
+      adv_pay_flag: Joi.string(),
+      grace_flag: Joi.string(),
+      grace_value: Joi.string(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     // console.log(value);
@@ -124,14 +134,21 @@ const save_add_device = async (req, res) => {
     const datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
     var custId = req.session.user.user_data.customer_id;
 
-    // console.log(value)
-    let fields = "(customer_id,app_id,dev_mod,report_flag,total_collection,created_at)",
-      values = `('${custId}','${value.app_id}','${value.dev_mode == "D" ? "D" : "F"}',
+    // console.log(value);
+    let fields =
+        "(customer_id,app_id,dev_mod,report_flag,total_collection,adv_pay,grace_period_flag,grace_value,created_at)",
+      values = `('${custId}','${value.app_id}','${
+        value.dev_mode
+      }',
       '${value.report_flag == "Y" ? "Y" : "N"}','${
         value.tot_col == "Y" ? "Y" : "N"
-      }','${datetime}')`;
+      }','${value.adv_pay_flag && value.adv_pay_flag == "Y" ? "Y" : "N"}','${
+        value.grace_flag && value.grace_flag == "Y" ? "Y" : "N"
+      }',${
+        value.grace_value != "" ? `'00:${value.grace_value}:00'` : 0
+      },'${datetime}')`;
     let res_dt = await db_Insert("md_setting", fields, values, null, 0);
-    // console.log("========device==========", res_dt);
+    console.log("========device==========", res_dt);
     req.flash("success", "Saved successful");
     res.redirect("/device/device_name");
     // res.send(res_dt)

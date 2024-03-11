@@ -7,7 +7,8 @@
             style="float: inline-end;border-radius: 6px;width: 6vw;">Add</button>
         </div>
         <div class="row mt-4">
-          <h2 class="text-dark">Header & Footer</h2>
+          <h2 class="text-dark"><i data-feather="command" class="feather-icon"></i>&nbsp;<b>Header &
+              Footer</b></h2>
         </div>
         <div class="table-responsive mt-3">
           <table id="example" class="table table-striped table-bordered show_data" style="width:100%">
@@ -21,12 +22,15 @@
             <tbody>
               <% data.msg.forEach(function(item,index) { %>
                 <tr>
-                  <td><%=(index+1)%></td>
-                  <td><%=item.customer_name %></td>                
                   <td>
-                    <a href="/header/edit_header_footer_details?customer_id=<%=item.customer_id%>" class="btn btn-info" style="border-radius: 5px;"
-                      ><i class="fa fa-edit"></i></a
-                    >
+                    <%=(index+1)%>
+                  </td>
+                  <td>
+                    <%=item.customer_name %>
+                  </td>
+                  <td>
+                    <a href="/header/edit_header_footer_details?customer_id=<%=item.customer_id%>" class="btn btn-info"
+                      style="border-radius: 5px;"><i class="fa fa-edit"></i></a>
                   </td>
                 </tr>
                 <% }); %>
@@ -216,7 +220,7 @@
 </div>
 
 <script>
-   $(document).ready(function() {
+  $(document).ready(function () {
     var customer_id = $(this).val()
     $.ajax({
       type: "GET",
@@ -225,14 +229,14 @@
       success: function (response) {
         if (response.suc > 0 && response.msg.length > 0) {
           $('#myBtn').hide()
-          }
-        },
+        }
+      },
       error: function (error) {
         console.log(error);
         tbody.empty();
       }
-      });
     });
+  });
 
 </script>
 
