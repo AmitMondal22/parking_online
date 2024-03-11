@@ -70,9 +70,9 @@ const unbilled = async (req, res) => {
         // console.log(data)
 
 
-        var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, f.operator_name, g.advance_amt`,
-            table_name = 'td_vehicle_in a, md_vehicle d, md_user e, md_operator f, td_receipt g',
-            whr = `a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.receipt_no = g.receipt_no AND a.car_out_flag = 'N' AND DATE(a.date_time_in) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`,
+        var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, f.operator_name`,
+            table_name = 'td_vehicle_in a, md_vehicle d, md_user e, md_operator f',
+            whr = `a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'N' AND DATE(a.date_time_in) BETWEEN '${value.from_date}' AND '${value.to_date}' AND a.customer_id = '${userData.customer_id}'`,
 
             order = 'ORDER BY a.receipt_no';
         var res_dt = await db_Select(select, table_name, whr, order)
