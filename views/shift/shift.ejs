@@ -73,9 +73,8 @@
               <div class="form-group col-md-3">
                 <label for="cust_id" class="text-dark"><b>Customer Name:</b></label>
                 <select name="cust_id" class="form-control" id="cust_id" required>
-                  <option value="<%=user.user_data.customer_id==data.msg[0].customer_id
-                    ? 'selected' : '' %>">
-                    <%= data.msg[0].customer_name %>
+                  <option value="<%=user.user_data.customer_id==data.msg.length > 0 ? (data.msg[0].customer_id ? 'selected' : '') : '' %>">
+                    <%= data.msg.length > 0 ? data.msg[0].customer_name : '' %>
                   </option>
                 </select>
               </div>
