@@ -205,19 +205,26 @@
               >
               </div>
 
-              <div class="col-md-4 cust-toggle1" style="margin-left: 15vw;">
+              <div class="col-md-3 cust-toggle1" style="margin-left: 15vw;">
                 <label for="in_on_off_flag" class="text-dark"><b>IN Receipt</b></label><br>
                 <input type="checkbox" value="Y" id="in_on_off_flag" data-toggle="toggle" data-onstyle="success"
                   data-offstyle="danger" data-on="Active" data-off="Deactive" name="in_on_off_flag" 
                 <%=(data.IN_on_off=='Y')?'checked':''%>>
               </div>
   
-              <div class="col-md-4 cust-toggle1">
+              <div class="col-md-3 cust-toggle1">
                 <label for="out_on_off_flag" class="text-dark"><b>OUT Receipt</b></label><br>
                 <input type="checkbox" value="Y" id="out_on_off_flag" data-toggle="toggle" data-onstyle="success"
                   data-offstyle="danger" data-on="Active" data-off="Deactive" name="out_on_off_flag"
                   <%=(data.OUT_on_off=='Y')?'checked':''%>>
               </div>    
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="report_flag" class="text-dark"><b>Report</b></label><br>
+                <input type="checkbox" value="Y" id="report_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="report_flag"
+                  <%=(data.report_flag=='Y')?'checked':''%>>
+              </div>  
           </div>
           <div class="row mt-4">
             <div class="form-group col-md-3">

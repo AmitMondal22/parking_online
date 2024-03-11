@@ -9,13 +9,15 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="frm_dt">From Date</label>
-                            <input type="date" id="frm_dt" name="frm_dt" class="form-control" required="">
+                            <!-- <input type="date" id="frm_dt" name="frm_dt" class="form-control" required=""> -->
+                             <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required="">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="to_dt">To Date</label>
-                            <input type="date" id="to_dt" name="to_dt" class="form-control" required="">
+                            <!-- <input type="date" id="to_dt" name="to_dt" class="form-control" required=""> -->
+                            <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required="">
                         </div>
                     </div>
                     <div class="col-md-4 searchBtnDataWis">
@@ -39,6 +41,7 @@
                                     <th scope="col">Mechine Sl. No. In</th>
                                     <th scope="col">Vehicle Type</th>
                                     <th scope="col">Vehicle No.</th>
+                                    <th scope="col">Advance Amount</th>
                                     <th scope="col">Operator Name</th>
                                 </tr>
                             </thead>
@@ -46,13 +49,13 @@
                                 
                             </tbody>
 
-                            <!-- <tfoot>
+                            <tfoot>
                                 <tr>
-                                    <td scope="col" colspan="8">Total</td>
+                                    <td scope="col" colspan="6">Total</td>
                                     <td scope="col" id="tot_amt"><b>0</b></td>
                                     <td></td>
                                 </tr>   
-                            </tfoot> -->
+                            </tfoot>
                         </table>
 
                         <a href="#" class="printBtnDate" onclick="printDiv()"><i class="fa fa-print"></i> Print</a>
@@ -72,7 +75,7 @@
         $('#btnSubmit').on('click', function(){
             var frm_dt = $('#frm_dt').val()
             var to_dt = $('#to_dt').val()
-            
+
             if(frm_dt != '' && to_dt != ''){
                 $.ajax({
                     method: "POST",
@@ -84,7 +87,7 @@
                     },
                     success: function (result) {
                         var res = JSON.parse(result);
-                        var paid_amt_tot = 0;
+                        var adv_amt_tot = 0;
                         $('#resultDiv').show()
                         $('#resultDiv table tbody').empty()
                         // console.log(res)
@@ -93,7 +96,7 @@
                                 $('#searchCred').text(`Unbilled Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
                                 let i = 1;
                                 for(let dt of res.msg){
-                                    // paid_amt_tot += dt.paid_amt
+                                    adv_amt_tot += dt.advance_amt
                                     $('#resultDiv table tbody').append(`
                                     <tr>
                                         <td>${i}</td>
@@ -102,14 +105,16 @@
                                         <td>${dt.device_id}</td>
                                         <td>${dt.vehicle_name}</td>
                                         <td>${dt.vehicle_no}</td>
+                                        <td>${dt.advance_amt}</td>
                                         <td>${dt.operator_name}</td>
                                     </tr>
                                     `)
                                     i++
                                 }
-                                // $('#tot_amt').text(paid_amt_tot)
+                                $('#tot_amt').text(adv_amt_tot)
                             }else{
                                 $('#resultDiv table tbody').append('<tr><td colspan="10" class="text-center text-danger">No Data Found</td></tr>')
+                                $('#tot_amt').text(adv_amt_tot)
                             }
                         }
                     },

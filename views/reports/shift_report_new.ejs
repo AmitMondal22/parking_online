@@ -20,7 +20,7 @@
                     </div>
 
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="to_dt">Select Shift</label>
                             <!-- <input type="date" id="to_dt" name="to_dt" class="form-control" required=""> -->
@@ -29,12 +29,12 @@
 
                                 <option value="">Select Shift</option>"
                                 <% shiftData.msg.forEach(function(item,index) {  %>
-                                <option value="<%= item.shift_id %>"><%= item.shift_name %></option>
+                                <option value="<%= item.shift_id %>"><%= item.shift_name %> (<%= item.f_time %>-<%= item.t_time %>)</option>
                                 <% }) %>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3 searchBtnDataWis">
+                    <div class="col-md-2 searchBtnDataWis">
                         <button type="button" class="btn waves-effect waves-light btn-rounded btn-outline-primary" id="btnSubmit">Search</button>
                     </div>
                 </div>
@@ -127,6 +127,8 @@
                                 $('#tot_cnt').text(cnt_tot)
                             }else{
                                 $('#resultDiv table tbody').append('<tr><td colspan="5" class="text-center text-danger">No Data Found</td></tr>')
+                                $('#tot_amt').text(paid_amt_tot)
+                                $('#tot_cnt').text(cnt_tot)
                             }
                         }
                     },

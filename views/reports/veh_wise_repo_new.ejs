@@ -9,13 +9,13 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="frm_dt">From Date</label>
-                            <input type="date" id="frm_dt" name="frm_dt" class="form-control" required="">
+                            <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required="">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="to_dt">To Date</label>
-                            <input type="date" id="to_dt" name="to_dt" class="form-control" required="">
+                            <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required="">
                         </div>
                     </div>
                     <div class="col-md-4 searchBtnDataWis">
@@ -121,6 +121,10 @@
                                 $('#tot_cnt').text(cnt_tot)
                             }else{
                                 $('#resultDiv table tbody').append('<tr><td colspan="6" class="text-center text-danger">No Data Found</td></tr>')
+                                $('#tot_advance').text(advance_amt_tot)
+                                $('#tot_paid').text(paid_amt_tot)
+                                $('#tot_amt').text(tot_amt_tot)
+                                $('#tot_cnt').text(cnt_tot)
                             }
                         }
                     },

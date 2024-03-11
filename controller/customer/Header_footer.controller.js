@@ -76,6 +76,7 @@ const add_header_footer = async (req, res) => {
       footer_4_flag: Joi.string(),
       in_on_off_flag: Joi.string(),
       out_on_off_flag: Joi.string(),
+      report_flag: Joi.string(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     // console.log(value);
@@ -92,7 +93,7 @@ const add_header_footer = async (req, res) => {
 
     // console.log(value)
     let fields =
-        "(customer_id,header1,header1_flag,header2,header2_flag,header3,header3_flag,header4,header4_flag,footer1,footer1_flag,footer2,footer2_flag,footer3,footer3_flag,footer4,footer4_flag,IN_on_off,OUT_on_off,created_at)",
+        "(customer_id,header1,header1_flag,header2,header2_flag,header3,header3_flag,header4,header4_flag,footer1,footer1_flag,footer2,footer2_flag,footer3,footer3_flag,footer4,footer4_flag,IN_on_off,OUT_on_off,report_flag,created_at)",
       values = `('${custId}','${value.header_1}','${
         value.header_1_flag == 1 ? 1 : 0
       }','${value.header_2}','${value.header_2_flag == 1 ? 1 : 0}','${
@@ -109,6 +110,8 @@ const add_header_footer = async (req, res) => {
         value.in_on_off_flag == 'Y' ? 'Y' : 'N'
       }','${
         value.out_on_off_flag == 'Y' ? 'Y' : 'N'
+      }','${
+        value.report_flag == 'Y' ? 'Y' : 'N'
       }','${datetime}')`;
     let res_dt = await db_Insert("md_receipt_setting", fields, values, null, 0);
     // console.log("========header==========", res_dt);
@@ -144,6 +147,8 @@ const edit_save_header_footer = async (req, res) => {
       footer_4_flag: Joi.string(),
       in_on_off_flag: Joi.string(),
       out_on_off_flag: Joi.string(),
+      report_flag: Joi.string(),
+
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     // console.log(value);
@@ -177,6 +182,8 @@ const edit_save_header_footer = async (req, res) => {
         value.in_on_off_flag == 'Y' ? 'Y' : 'N'
       }',OUT_on_off='${
         value.out_on_off_flag == 'Y' ? 'Y' : 'N'
+      }',report_flag='${
+        value.report_flag == 'Y' ? 'Y' : 'N'
       }',updated_at='${datetime}'`,
       where = `customer_id='${value.cust_id}'`;
     let res_dt2 = await db_Insert("md_receipt_setting", fields, null, where, 1);
