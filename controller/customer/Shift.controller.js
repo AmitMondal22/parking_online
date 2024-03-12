@@ -24,7 +24,7 @@ const shift = async (req, res) => {
 const save_add_shift = async (req, res) => {
     try {
       const schema = Joi.object({
-        cust_id: Joi.string(),
+        cust_id: Joi.optional(),
         shift_name: Joi.required(),
         frm_time: Joi.required(),
         to_time: Joi.required(),

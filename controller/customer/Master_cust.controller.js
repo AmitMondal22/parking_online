@@ -88,13 +88,21 @@ const report_pwd = async (req, res) => {
     whr = `app_id = '${data.dev_id}' AND customer_id=${custId}`,
     order = null;
   var pwd_data = await db_Select(select, table_name, whr, order);
-  res.send(pwd_data);
+  const page_data = {
+    title: "Report Password",
+    page_path: "/settings/password",
+    data: pwd_data,
+  };
+  // console.log(pwd_data);
+  res.render("common/layouts/main", page_data);
 };
+
+
 
 const save_report_password = async (req, res) => {
   try {
     var data = req.body;
-    // console.log(data);
+    console.log(data);
 
     const userData = req.user;
     var custId = req.session.user.user_data.customer_id;
@@ -102,13 +110,15 @@ const save_report_password = async (req, res) => {
     // console.log(userData,'1234');
     const datetime = dateFormat(new Date(), "yyyy-mm-dd");
     var password = bcrypt.hashSync(data.pwd, 10);
-    let fields = `password = '${password}',modified_by=${custId},updated_at='${datetime}'`,
+    let fields = `report_password_flag='${data.report_pwd == 'Y' ? 'Y' : 'N'}',password = '${data.report_pwd == 'Y' ? password : '' }',modified_by=${custId},updated_at='${datetime}'`,
       where = `customer_id='${custId}' AND app_id='${data.app_id}'`;
     let res_dt = await db_Insert("md_setting", fields, null, where, 1);
-    // console.log(res_dt);
+    console.log(res_dt);
+    req.flash("success", "Updated successful");
     res.redirect("/password");
   } catch (error) {
     // console.log(error);
+    req.flash("error", "Data not Updated Successfully");
     res.send({ suc: 0, msg: error });
   }
 };

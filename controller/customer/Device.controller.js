@@ -58,7 +58,7 @@ const edit_device = async (req, res) => {
     data: resData.suc > 0 && resData.msg.length > 0 ? resData.msg[0] : [],
     customer_id: custId,
   };
-  console.log(viewData);
+  // console.log(viewData);
   res.render("common/layouts/main", viewData);
 };
 
@@ -75,7 +75,7 @@ const save_edit_device = async (req, res) => {
       grace_value: Joi.string(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
-    console.log(value);
+    // console.log(value);
     if (error) {
       const errors = {};
       error.details.forEach((detail) => {
@@ -99,11 +99,11 @@ const save_edit_device = async (req, res) => {
       },modified_by='${custId}',updated_at='${datetime}'`,
       where = `customer_id='${custId}' AND app_id='${value.app_id}'`;
     let res_dt2 = await db_Insert("md_setting", fields, null, where, 1);
-    console.log(res_dt2);
+    // console.log(res_dt2);
     req.flash("success", "Updated successful");
     res.redirect("/device/device_name");
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     req.flash("error", "Data not Updated Successfully");
     res.redirect("/device/device_name");
   }
@@ -148,7 +148,7 @@ const save_add_device = async (req, res) => {
         value.grace_value != "" ? `'00:${value.grace_value}:00'` : 0
       },'${datetime}')`;
     let res_dt = await db_Insert("md_setting", fields, values, null, 0);
-    console.log("========device==========", res_dt);
+    // console.log("========device==========", res_dt);
     req.flash("success", "Saved successful");
     res.redirect("/device/device_name");
     // res.send(res_dt)
