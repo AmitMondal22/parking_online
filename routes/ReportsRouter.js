@@ -70,9 +70,12 @@ reportRouter.post('/get_unbilled_report', AuthCheckedMW, async (req, res) => {
         userType = req.session.user.user_data.user_type;
 
     var data = req.body;
-    var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, f.operator_name, 0 advance_amt`,
-        table_name = 'td_vehicle_in a, md_vehicle d, md_user e, md_operator f',
-        whr = `a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'N' AND a.date_time_in BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`,
+    var select = `a.receipt_no, a.date_time_in, a.device_id, d.vehicle_name, a.vehicle_no, f.operator_name, g.advance_amt`,
+        table_name = `td_vehicle_in a JOIN  md_vehicle d ON  a.vehicle_id=d.vehicle_id
+        JOIN md_user e  ON a.user_id_in=e.id 
+        JOIN md_operator f ON e.user_id=f.user_id  
+        LEFT JOIN td_receipt g ON a.receipt_no = g.receipt_no`,
+        whr = `a.car_out_flag = 'N' AND a.date_time_in BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`,
         order = 'ORDER BY a.receipt_no';
     var res_dt = await db_Select(select, table_name, whr, order)
     res.send(res_dt)
@@ -232,7 +235,7 @@ reportRouter.post('/shift_wise_repo', AuthCheckedMW, async (req, res) => {
     let ftime=shift_time.msg[0].f_time;
     let ttime=shift_time.msg[0].t_time;
 
-    var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) tot_amt, f.operator_name opratorName`,
+    var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt, f.operator_name opratorName`,
         table_name = 'td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f',
         whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND TIME(b.date_time_out) BETWEEN '${ftime}' AND '${ttime}' AND a.customer_id = '${custId}'`,
         order = 'GROUP BY a.user_id_in';

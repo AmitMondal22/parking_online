@@ -5,7 +5,8 @@ const dashboard=async (req,res)=>{
             page_path:'dashboard/dashboard',
         }
         // res.render('common/layouts/main',page_data);
-        res.redirect('/report/details_report')
+        // res.redirect('/report/details_report')
+        res.redirect('/report/details_report_new')
     }catch(err){
         res.render('auth/login');
     }
