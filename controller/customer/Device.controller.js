@@ -73,6 +73,7 @@ const save_edit_device = async (req, res) => {
       adv_pay_flag: Joi.string(),
       grace_flag: Joi.string(),
       grace_value: Joi.string(),
+      redirect_flag: Joi.optional(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     // console.log(value);
@@ -96,7 +97,7 @@ const save_edit_device = async (req, res) => {
         value.grace_flag == "Y" ? "Y" : "N"
       }',grace_value=${
         value.grace_value != "" ? `'00:${value.grace_value}:00'` : 0
-      },modified_by='${custId}',updated_at='${datetime}'`,
+      },redirection_flag='${ value.redirect_flag == "Y" ? "Y" : "N"}',modified_by='${custId}',updated_at='${datetime}'`,
       where = `customer_id='${custId}' AND app_id='${value.app_id}'`;
     let res_dt2 = await db_Insert("md_setting", fields, null, where, 1);
     // console.log(res_dt2);
@@ -120,6 +121,7 @@ const save_add_device = async (req, res) => {
       adv_pay_flag: Joi.string(),
       grace_flag: Joi.string(),
       grace_value: Joi.string(),
+      redirect_flag: Joi.optional(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     // console.log(value);
@@ -136,7 +138,7 @@ const save_add_device = async (req, res) => {
 
     // console.log(value);
     let fields =
-        "(customer_id,app_id,dev_mod,report_flag,total_collection,adv_pay,grace_period_flag,grace_value,created_at)",
+        "(customer_id,app_id,dev_mod,report_flag,total_collection,adv_pay,grace_period_flag,grace_value,redirection_flag,created_at)",
       values = `('${custId}','${value.app_id}','${
         value.dev_mode
       }',
@@ -146,7 +148,9 @@ const save_add_device = async (req, res) => {
         value.grace_flag && value.grace_flag == "Y" ? "Y" : "N"
       }',${
         value.grace_value != "" ? `'00:${value.grace_value}:00'` : 0
-      },'${datetime}')`;
+      },'${
+        value.redirect_flag && value.redirect_flag == "Y" ? "Y" : "N"
+      }','${datetime}')`;
     let res_dt = await db_Insert("md_setting", fields, values, null, 0);
     // console.log("========device==========", res_dt);
     req.flash("success", "Saved successful");
